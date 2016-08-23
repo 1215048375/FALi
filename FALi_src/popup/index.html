@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>popup</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="css/reset-com.css">
+	<link rel="stylesheet" type="text/css" href="css/index1.css">
+	<link rel="stylesheet" type="text/css" href="css/index2.css">
+</head>
+<body>
+<div class="cont wth">
+	<div class="hd">
+		<h1 class="logo fl"><a href="http://www.taokezhushou.com" target="_blank"></a></h1>
+		<div class="search fr">
+		<form action="http://www.taokezhushou.com/search" method="get" target="_blank">
+			<input type="text" class="search-text fl" placeholder="请输入要查找的商品" name="word">
+			<input type="submit" value="搜 索" class="search-btn fl">
+		</form>
+		</div>
+	</div>
+	<div class="nav">
+		<ul>
+			<li class="nav1 fl"><p><a href="http://www.taokezhushou.com" target="_blank">今日<span id="new">0</span>个上新</a></p></li>
+			<li class="nav2 fl nav-hover" id="top10"><a href="#">热推TOP10</a></li>
+			<li class="nav3 fr" id="set"><a href="#">插件设置</a></li>
+		</ul>
+	</div>
+	<div class="nav-nav2">
+		<div style="width:350px;height:350px" id="loading">
+			<img src="images/loading.gif" style="margin-top:100px;margin-left:130px"/>
+			<div style="padding-left:130px">努力加载中，请稍后.....</div>
+		</div>
+	</div>
+	<div class="nav-nav3" style="display:none">
+		<div class="install">
+			<h3 class="install1">插件载入时设置</h3>
+			<p class="install2">载入时隐藏插件<span style="padding-left:10px;position: relative;top:7px"><input class="mui-switch mui-switch-anim" type="checkbox" value="onf" checked></span></p>
+			<p class="install2">显示隐藏快捷键<span style="padding-left:10px;">Ctrl + <input id="keyPlugin" maxlength="1" type="text" style="width:20px;padding-left:5px" value=""/></span></p>
+			<p class="install2">短链服务<span style="padding-left:10px;">
+				<select id="dwzServer">
+					<option value ="baidu">百度短网址</option>
+					<option value ="weibo">微博短网址</option>
+				</select>
+				</span>
+			</p>
+		</div>
+		<div class="apply">
+			<h3 class="apply1">定向计划申请</h3>
+			<p class="apply2">申请理由：</p>
+			<p class="apply3">
+    			<textarea name="intro" id="applyReason">淘客助手会员申请，望通过</textarea>
+    		</p>
+		</div>
+	</div>
+	<script src="./popup.js"></script>
+</div>
+</body>
+</html>

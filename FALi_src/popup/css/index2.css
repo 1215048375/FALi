@@ -1,0 +1,10 @@
+.nav{border-bottom: 1px solid #e8e8e8;}
+.nav-nav3{width:350px;height:500px;padding:0 15px;overflow:auto;}
+.install{height:204px;color:#707070;border-bottom: 1px dashed #e8e8e8;}
+.install1,.apply1{width:140px;font-size:18px;margin:25px auto;}
+.install2,.install3{width:195px;height:30px;font-size:14px;margin:25px auto;}
+.install2 i,.install3 i{width:45px;height:25px;padding-left:20px;vertical-align: middle;}
+
+.apply1{padding-left:10px;}
+.apply2{font-size: 14px;color:#707070;margin-bottom: 5px;}
+.apply3 textarea{width:312px;height:162px;padding: 3px 10px;}
