@@ -28,21 +28,48 @@ $(function(){
 
 //获取各个数据，渲染网页
 "use strict";
-var RenderElements = React.createClass({
-  displayName: "RenderElements",
+var author_url = "http://www.quanweiwei.cn";
+var logo_src = "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png";
+
+var faliElements = React.createClass({
+  displayName: "faliElements",
   render: function render() {
     return React.createElement(
       "div",
-      null,
-      "Hello ",
-      this.props.name
+      {id: 'fali-wrapper'},
+      React.createElement(   //顶部head DIV，显示功能。
+        "div",
+        {id: 'fali-head'},
+        React.createElement(   //logo
+          "div",
+          {id: 'fali-logo'},
+          React.DOM.a(         //logo 超链接
+            {href:author_url}，
+            React.DOM.img(
+              {id: 'logo',
+               src:logo_src}
+              )
+            )
+          ),
+          React.createElement(   //价格趋势
+            "div",
+            {id: 'fali-qushi'},
+            React.DOM.img(
+              {id: 'logo',
+               src:logo_src}
+              )
+            ),
+        ),
+      React.createElement(   //下面 content DIV，显示一些广告信息。
+        "div",
+        {id: 'fali-content'},
+        "world")
     );
   }
 });
-
 //根据淘宝，天猫，阿里旅行等网址不同，查找网页对应位置添加 DIV 区块。
 function addDivElement(){
-  ReactDOM.render(React.createElement(RenderElements, { name: "John" }),
-  document.getElementById('fali')
+  ReactDOM.render(React.createElement(faliElements),
+    document.getElementById('fali')
   );
 }
