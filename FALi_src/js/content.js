@@ -43,22 +43,20 @@ var faliElements = React.createClass({
         React.createElement(   //logo
           "div",
           {id: 'fali-logo'},
-          React.DOM.a(         //logo 超链接
-            {href:author_url}，
+          React.createElement(         //logo 超链接
+            "a",
+            {href: 'author_url'},
             React.DOM.img(
               {id: 'logo',
                src:logo_src}
               )
             )
           ),
-          React.createElement(   //价格趋势
-            "div",
-            {id: 'fali-qushi'},
-            React.DOM.img(
-              {id: 'logo',
-               src:logo_src}
-              )
-            ),
+        React.createElement(   //价格趋势
+          "div",
+          {id: 'fali-qushi'},
+          "qushi"
+          ),
         ),
       React.createElement(   //下面 content DIV，显示一些广告信息。
         "div",
