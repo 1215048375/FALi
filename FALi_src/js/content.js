@@ -66,15 +66,16 @@ chrome.runtime.sendMessage(
         for (var index in day_price_array){
           var day_price_item_array = day_price_array[index].split(","); //将每个 '2016-08-24',58 类型的串分割
           var day_item = day_price_item_array[0].replace(/'/g,""); //日期  格式为 2016-08-25
+          day_item = day_item.substr(6).replace(/-/g,"/");
           day_item_array.push(day_item);
           var price_item = day_price_item_array[1]; //价格
           price_item = Number(price_item);
           price_item_array.push(price_item);
         }
-        console.log(price_item_array);
+        //console.log(price_item_array);
         //图表
         $('#fali_float_qushi').highcharts({
-            colors: ['#ED561B', '#DDDF00', '#058DC7', '#50B432', '#24CBE5', '#64E572',
+            colors: ['#EB4F38', '#DDDF00', '#058DC7', '#50B432', '#24CBE5', '#64E572',
                 '#FF9655', '#FFF263', '#6AF9C4'],
             title: {
                 text: '近期价格趋势',
@@ -85,7 +86,8 @@ chrome.runtime.sendMessage(
                 x: -20
             },
             xAxis: {
-                categories: day_item_array
+                categories: day_item_array,
+                gridLineWidth: 1,
             },
             yAxis: {
                 title: {
@@ -117,14 +119,19 @@ chrome.runtime.sendMessage(
   });
 
 
-var fali_head_qushi = React.DOM.div({id:'fali_head_qushi'},'价格趋势');
+var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},'价格趋势');
 
+var fali_head_simple_fanli = React.DOM.div({id:'fali_head_simple_fanli',className:'no-left-border'},'fali_head_simple_fanli');
+
+var fali_head_high_fanli = React.DOM.div({id:'fali_head_high_fanli',className:'no-left-border'},'fali_head_high_fanli');
+
+var fali_head_qq_donate = React.DOM.div({id:'fali_head_qq_donate',className:'no-left-border'},'fali_head_qq_donate');
 
 //fali_head start
-var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
+var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi,fali_head_simple_fanli,fali_head_high_fanli,fali_head_qq_donate); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
 
 //fali_content start
-var fali_content = React.DOM.div({id:'fali_content'},'fali_content');
+var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},'fali_content');
 
 //fali_float_qushi div start,浮动显示价格趋势的div块，是fali_wrapper的子块
 var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'},'fali_float_qushi');
