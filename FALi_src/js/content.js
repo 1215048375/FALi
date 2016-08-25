@@ -42,8 +42,6 @@ var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
 var author_url = "http://www.quanweiwei.cn";  //作者主页
 var logo_src = "http://www.kanhaody.com/FALi/logo.png"; //logo
 
-
-
 //fali_logo start
 var fali_head_logo_a_img = React.DOM.img({src:logo_src,alt:'网购返利助手',title:'网购返利助手'});
 var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_img);
@@ -54,9 +52,26 @@ chrome.runtime.sendMessage(
   {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getUrlParam('id')+".html"},
   function(response){
     if("ok"== response.msg){
-      var pageData=response.data.replace(/(\s{2,}|\n)/gim,"");
-      var 
-      console.log(pageData);
+      var pageData=response.data.replace(/(\s{2,}|\n)/gim,""); //获取etao 页面代码，去掉空格
+      var date_prices = pageData.match(/points.*\[(.*)\]};/m);
+      if(null != date_prices){
+        var date_prices = date_prices[0]; //获取到第一个匹配到的串 包含了日期  和 价格。
+        date_prices=date_prices.replace("points : [[","");
+        date_prices=date_prices.replace("]]};","");
+        var day_price_array=date_prices.split("],[");
+        for (var index in day_price_array){
+          var day_price_item_array = day_price_array[index].split(","); //将每个 '2016-08-24',58 类型的串分割
+          var day_item = day_price_item_array[0].replace(/'/g,""); //日期  格式为 2016-08-25
+          var price_item = day_price_item_array[1]; //价格
+          //图表
+        }
+      }else{
+        var priceExp=new RegExp("<span class='original-price del'>￥(.*?)</span>","g"),
+        price = priceExp.exec(pageData);
+        if(null!=price){
+          //图表
+        }
+      }
     }
 
   });
