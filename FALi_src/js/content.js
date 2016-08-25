@@ -75,6 +75,7 @@ chrome.runtime.sendMessage(
     }
 
   });
+  
 var fali_head_qushi = React.DOM.div({id:'fali_head_qushi'},'价格趋势');
 
 
