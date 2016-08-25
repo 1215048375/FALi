@@ -4,3 +4,9 @@
 #fali_head_logo,#fali_head_qushi{
   display: inline-block;
 }
+
+
+/*价格趋势浮动框样式*/
+#fanli_float_qushi{
+  display: none;
+}
