@@ -1,3 +1,6 @@
 #fali{
   border:1px solid #dddddd;
 }
+#fali_head_logo,#fali_head_qushi{
+  display: inline-block;
+}

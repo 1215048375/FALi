@@ -26,43 +26,52 @@ $(function(){
   addDivElement();
 });
 
+//URL工具类通过页面URL获取参数信息
+var URLUtils = {
+  //获取url中的参数
+  getUrlParam:function(name){
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+  }
+};
+var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
+
 //获取各个数据，渲染网页
 "use strict";
-var author_url = "http://www.quanweiwei.cn";
-var logo_src = "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png";
+var author_url = "http://www.quanweiwei.cn";  //作者主页
+var logo_src = "http://www.kanhaody.com/FALi/logo.png"; //logo
+
+
+
+//fali_logo start
+var fali_head_logo_a_img = React.DOM.img({src:logo_src,alt:'网购返利助手',title:'网购返利助手'});
+var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_img);
+var fali_head_logo = React.DOM.div({id:'fali_head_logo'},fali_head_logo_a);
+
+//fali_qushi start 价格趋势开始
+chrome.runtime.sendMessage(
+  {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getUrlParam('id')+".html"},
+  function(response){
+    if("ok"== response.msg){
+      var pageData=response.data.replace(/(\s{2,}|\n)/gim,"");
+      var 
+      console.log(pageData);
+    }
+
+  });
+var fali_head_qushi = React.DOM.div({id:'fali_head_qushi'},'价格趋势');
+
+
+//fali_head start
+var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
+
 
 var faliElements = React.createClass({
   displayName: "faliElements",
+
   render: function render() {
-    return React.createElement(
-      "div",
-      {id: 'fali-wrapper'},
-      React.createElement(   //顶部head DIV，显示功能。
-        "div",
-        {id: 'fali-head'},
-        React.createElement(   //logo
-          "div",
-          {id: 'fali-logo'},
-          React.createElement(         //logo 超链接
-            "a",
-            {href: 'author_url'},
-            React.DOM.img(
-              {id: 'logo',
-               src:logo_src}
-              )
-            )
-          ),
-        React.createElement(   //价格趋势
-          "div",
-          {id: 'fali-qushi'},
-          "qushi"
-          ),
-        ),
-      React.createElement(   //下面 content DIV，显示一些广告信息。
-        "div",
-        {id: 'fali-content'},
-        "world")
-    );
+    return React.createElement("div",{id: 'fali_wrapper'},fali_head);   //创建fali_wrapper 包裹DIV
   }
 });
 //根据淘宝，天猫，阿里旅行等网址不同，查找网页对应位置添加 DIV 区块。
