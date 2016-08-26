@@ -14,20 +14,33 @@
   border-bottom-left-radius:4px;
 }
 
-#fali{
-
-}
 #fali_wrapper{
   position: relative;
 }
 
-#fali_head div{
+#fali_head_logo,#fali_head_qushi,#fali_head_simple_fanli,#fali_head_high_fanli,#fali_head_qq_donate{
   height:30px;
   line-height:30px;
-}
-#fali_head_logo,#fali_head_qushi,#fali_head_simple_fanli,#fali_head_high_fanli,#fali_head_qq_donate{
+  text-align: center;
+  position: relative;
+  z-index: 999999999;
   display: inline-block;
 }
+
+#fali_head_logo{
+  width: 10%;
+  background: #EB4F38;
+  border: 1px solid #EB4F38;
+  border-top-left-radius: 4px;
+}
+#fali_head_logo a{
+  font-weight: bold;
+  text-decoration: none;
+}
+#fali_head_logo_a_div{
+  color: #FFFFFF;
+}
+
 
 #fali_head_qushi{
   width:20%;
@@ -43,6 +56,17 @@
   border:1px solid #dedede;
   border-bottom: 4px solid #EB4F38;
   border-radius: 4px;
-  box-shadow:2px 2px 3px #aaaaaa;
-  display:none;
+  display:block;
+}
+
+#fali_head_simple_fanli{
+  width: 25%;
+}
+
+#fali_head_high_fanli{
+  width: 25%;
+}
+
+#fali_head_qq_donate{
+  border-top-right-radius: 4px;
 }

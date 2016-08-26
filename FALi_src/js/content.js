@@ -24,6 +24,12 @@ $(function(){
   ($(".tm-ind-panel").after('<div id="fali" style="margin-top:10px;margin-bottom:5px"></div>')):
   1;
   addDivElement();
+
+  //渲染完页面后使用jQuery 调整宽度
+  var allWidth = $("#fali_wrapper").width();
+  $("#fali_head_qq_donate").width(allWidth * 0.2 - 6);
+
+  $("#fali_float_qushi").width(allWidth-2);
 });
 
 //URL工具类通过页面URL获取参数信息
@@ -40,11 +46,10 @@ var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
 //获取各个数据，渲染网页
 "use strict";
 var author_url = "http://www.quanweiwei.cn";  //作者主页
-var logo_src = "http://www.kanhaody.com/FALi/logo.png"; //logo
 
 //fali_logo start
-var fali_head_logo_a_img = React.DOM.img({src:logo_src,alt:'网购返利助手',title:'网购返利助手'});
-var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_img);
+var fali_head_logo_a_div = React.DOM.div({id:'fali_head_logo_a_div'},"F•ALi");
+var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_div);
 var fali_head_logo = React.DOM.div({id:'fali_head_logo'},fali_head_logo_a);
 
 //fali_qushi start 价格趋势开始
