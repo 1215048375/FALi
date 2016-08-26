@@ -130,9 +130,50 @@ chrome.runtime.sendMessage(
         });
       }else{
         var priceExp=new RegExp("<span class='original-price del'>￥(.*?)</span>","g"),
-        price = priceExp.exec(pageData);
+        price = priceExp.exec(pageData)[1];
         if(null!=price){
+          var price =  Number(price) ;
+          var price_array = new Array();
+          price_array.push(price);
+
+          var date = new Date();
+          var day = date.getUTCFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+          var day_array = new Array();
+          day_array.push(day);
           //图表
+          $('#fali_float_qushi').highcharts({
+              colors: ['#EB4F38', '#DDDF00', '#058DC7', '#50B432', '#24CBE5', '#64E572',
+                  '#FF9655', '#FFF263', '#6AF9C4'],
+              title: {
+                  text: '近期价格趋势',
+                  x: -20 //center
+              },
+              subtitle: {
+                  text: '数据来源:etao.com',
+                  x: -20
+              },
+              xAxis: {
+                  categories: day_array,
+                  gridLineWidth: 1,
+              },
+              yAxis: {
+                  title: {
+                      text: '价格（元）'
+                  },
+                  plotLines: [{
+                      value: 0,
+                      width: 1,
+                      color: '#808080'
+                  }]
+              },
+              tooltip: {
+                  valueSuffix: '元'
+              },
+              series: [{
+                name: '价格',
+                data: price_array
+              }]
+          });
         }
       }
     }
