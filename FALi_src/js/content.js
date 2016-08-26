@@ -27,7 +27,7 @@ $(function(){
 
   //渲染完页面后使用jQuery 调整宽度
   var allWidth = $("#fali_wrapper").width();
-  $("#fali_head_qq_donate").width(allWidth * 0.2 - 6);
+  $("#fali_head_high_fanli").width(allWidth * 0.26 - 6);
 
   $("#fali_float_qushi").width(allWidth-2);
 
@@ -183,14 +183,24 @@ chrome.runtime.sendMessage(
 var fali_head_qushi_title = React.DOM.span({id:'fali_head_qushi_title'},'价格趋势');
 var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},fali_head_qushi_title);
 
-var fali_head_simple_fanli = React.DOM.div({id:'fali_head_simple_fanli',className:'no-left-border'},'fali_head_simple_fanli');
 
-var fali_head_high_fanli = React.DOM.div({id:'fali_head_high_fanli',className:'no-left-border'},'fali_head_high_fanli');
+//fali_head_coupon start 优惠券开始
+var fali_head_coupon_title = React.DOM.span({id:'fali_head_coupon_title'},'优惠券');
+var fali_head_coupon = React.DOM.div({id:'fali_head_coupon',className:'no-left-border'},fali_head_coupon_title);
 
-var fali_head_qq_donate = React.DOM.div({id:'fali_head_qq_donate',className:'no-left-border'},'fali_head_qq_donate');
+//fali_head_simple_fanli start 普通返利界面开始
+var fali_head_simple_fanli_title = React.DOM.span({id:'fali_head_simple_fanli_title'},'普通返利');
+var fali_head_simple_fanli_percent = React.DOM.span({id:'fali_head_simple_fanli_percent'},'3%');
+var fali_head_simple_fanli = React.DOM.div({id:'fali_head_simple_fanli',className:'no-left-border'},fali_head_simple_fanli_title,fali_head_simple_fanli_percent);
+
+//fali_head_high_fanli start 高额返利界面开始
+var fali_head_high_fanli_title = React.DOM.span({id:'fali_head_high_fanli_title'},'高额返利');
+var fali_head_high_fanli_percent = React.DOM.span({id:'fali_head_high_fanli_percent'},'30%');
+var fali_head_high_fanli = React.DOM.div({id:'fali_head_high_fanli',className:'no-left-border'},fali_head_high_fanli_title,fali_head_high_fanli_percent);
+
 
 //fali_head start
-var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi,fali_head_simple_fanli,fali_head_high_fanli,fali_head_qq_donate); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
+var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi,fali_head_coupon,fali_head_simple_fanli,fali_head_high_fanli); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
 
 //fali_content start
 var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},'fali_content');

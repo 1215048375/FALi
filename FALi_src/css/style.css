@@ -22,7 +22,7 @@
   position: relative;
 }
 
-#fali_head_logo,#fali_head_qushi,#fali_head_simple_fanli,#fali_head_high_fanli,#fali_head_qq_donate{
+#fali_head_logo,#fali_head_qushi,#fali_head_simple_fanli,#fali_head_high_fanli,#fali_head_coupon{
   height:30px;
   line-height:30px;
   text-align: center;
@@ -48,14 +48,13 @@
 
 #fali_head_qushi{
   width:20%;
-  line-height:30px;
-  text-align: center;
 }
 #fali_head_qushi_title{
-  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPklEQVQ4T9WSMU7DQBBFZyykpCNITmpzAkwBcYcvgLM3CLkBNyDcAE6AuYExB0joHNH4CrQxUlKCQnaYMWzwJgbJJdt59/+3f/4aoeF6PT9VhM6RsWFDPyyU31np1hQRS0gtQERr3R64aXa/fUEJoNaEjYds398B/AjQJ4C495CNqpB51M8RwdvDd2+l2zcWoGoGgifOd1aFzKMgZvOQcH3cS55za4S5OvGBnDuJRqhDEWwMnAQJXhh4hRpG7mMWWyWKGcmZSCfGbAQGUt5GdOums8tiEHCwr4V/mS0IUKebzpTsWYAi6ieM88DRF2aujYB76KZZKCbp5yDJlzuAhQo8gLelObQE34AiCsa8T9KDzG8lqPuRthP8+i0dSIIPDcMS5HDkJJs2AhQqCPnN5QU4JFzzzON/BqgrscneJxdA8OyMld77AAAAAElFTkSuQmCC) no-repeat;
-  line-height: 16px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPklEQVQ4T9WSMU7DQBBFZyykpCNITmpzAkwBcYcvgLM3CLkBNyDcAE6AuYExB0joHNH4CrQxUlKCQnaYMWzwJgbJJdt59/+3f/4aoeF6PT9VhM6RsWFDPyyU31np1hQRS0gtQERr3R64aXa/fUEJoNaEjYds398B/AjQJ4C495CNqpB51M8RwdvDd2+l2zcWoGoGgifOd1aFzKMgZvOQcH3cS55za4S5OvGBnDuJRqhDEWwMnAQJXhh4hRpG7mMWWyWKGcmZSCfGbAQGUt5GdOums8tiEHCwr4V/mS0IUKebzpTsWYAi6ieM88DRF2aujYB76KZZKCbp5yDJlzuAhQo8gLelObQE34AiCsa8T9KDzG8lqPuRthP8+i0dSIIPDcMS5HDkJJs2AhQqCPnN5QU4JFzzzON/BqgrscneJxdA8OyMld77AAAAAElFTkSuQmCC) left center no-repeat;
   vertical-align: middle;
-  padding-left: 18px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 19px;
 }
 
 #fali_float_qushi{
@@ -71,14 +70,20 @@
   display:none;
 }
 
+#fali_head_coupon{
+  width: 20%;
+}
+#fali_head_coupon_title{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABoUlEQVQ4T7WTQTIDURCG+38ZJTtZiK1xg9lglhwg8m5gnEBugBOIE+AEJnEAsRJlEzdgK6rELoyZX7+JSUVIUaXM6tXrfl//3X8P+vWQ8ocP/wugHKg8H5DtWSK/KPAgK28prRgcVltd9G24IZQLZLIjkg1ozNkk7DMAsunJsOcS3qQcVONu58kGFXce3Zf1LL4DFpBpBZ1xgLxdbF83+rX1hqqpT7Ww8RWg/Vbb3f3fGNLfCvcFsudyv3GBz8gYlUqvnYTzF1DJHl5WEpnzQaMKsTBjBnwWoumZYdMlJFm56R6PkjnwzEuUzyCTSMBGARorULtOhOxBUKFJW0vxTe/BrgZIvbxi9fzq8rEWRhm4IECgcAV+24LWo5wutbuRLtmd5iznAGfpRO+zXNDXcqlt2DQtWxo5/ki8V4D/I8AtUSJpRVjaLSQqMHfnyYZ+4hZqPJcResoFDvSq8hsrJ1pYH7jp55MldNsUAtRBHhGweRUy1vOuDqeVFwCD4g0ea2s2g7Ew6kLKQH8cnwYx1S7DLHaAIq77YXXAd1JCr4i/AyP61F8rEWqrAAAAAElFTkSuQmCC) left center no-repeat;
+  vertical-align: middle;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 19px;
+}
 #fali_head_simple_fanli{
-  width: 25%;
+  width: 24%;
 }
 
 #fali_head_high_fanli{
-  width: 25%;
-}
-
-#fali_head_qq_donate{
   border-top-right-radius: 4px;
 }
