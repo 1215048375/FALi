@@ -30,6 +30,22 @@ $(function(){
   $("#fali_head_qq_donate").width(allWidth * 0.2 - 6);
 
   $("#fali_float_qushi").width(allWidth-2);
+
+  $("#fali_head_qushi").hover(function(){
+    $("#fali_float_qushi").show();
+    $(this).addClass("fali_head_visited");
+  },function(){
+    $("#fali_float_qushi").hide();
+    $(this).removeClass("fali_head_visited");
+  });
+  $("#fali_float_qushi").hover(function(){
+    $("#fali_head_qushi").addClass("fali_head_visited");
+    $(this).show();
+  },function(){
+    $("#fali_head_qushi").removeClass("fali_head_visited");
+    $(this).hide();
+  });
+
 });
 
 //URL工具类通过页面URL获取参数信息
@@ -123,8 +139,8 @@ chrome.runtime.sendMessage(
 
   });
 
-
-var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},'价格趋势');
+var fali_head_qushi_title = React.DOM.span({id:'fali_head_qushi_title'},'价格趋势');
+var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},fali_head_qushi_title);
 
 var fali_head_simple_fanli = React.DOM.div({id:'fali_head_simple_fanli',className:'no-left-border'},'fali_head_simple_fanli');
 
