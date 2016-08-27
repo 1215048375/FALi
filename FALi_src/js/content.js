@@ -62,13 +62,15 @@ var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
 //获取各个数据，渲染网页
 "use strict";
 var author_url = "http://www.quanweiwei.cn";  //作者主页
+var taokezhushou_url = "http://zhushou3.taokezhushou.com/"; //淘客助手API根网址
 
-//fali_logo start
+/***********fali_logo start***********/
 var fali_head_logo_a_div = React.DOM.div({id:'fali_head_logo_a_div'},"F•ALi");
 var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_div);
 var fali_head_logo = React.DOM.div({id:'fali_head_logo'},fali_head_logo_a);
 
-//fali_qushi start 价格趋势开始
+
+/***********fali_qushi start 价格趋势开始***********/
 chrome.runtime.sendMessage(
   {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getUrlParam('id')+".html"},
   function(response){
@@ -184,8 +186,67 @@ var fali_head_qushi_title = React.DOM.span({id:'fali_head_qushi_title'},'价格�
 var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},fali_head_qushi_title);
 
 
-//fali_head_coupon start 优惠券开始
-var fali_head_coupon_title = React.DOM.span({id:'fali_head_coupon_title'},'优惠券');
+/*************fali_head_coupon start 优惠券开始***********/
+
+var fali_head_coupon_count = React.createClass({
+  displayName:"fali_head_coupon_count",
+
+  getInitialState: function getInitialState() { //初始化优惠券数量 0
+    return { couponCount: 0 , couponContext:"正在获取优惠券，请稍候..." };
+  },
+  getCouponInfo: function getCouponInfo() { //获取优惠券信息
+    var couponCount = 0;
+    chrome.runtime.sendMessage( //1.获取sellerId
+      {type:"gajax",url:window.location.href},
+      function(response_item){
+        if("ok"==response_item.msg){
+          var pageData=response_item.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
+          var sellerId = pageData.match(/sellerId=(\d+)&/im)[1]; //获取 sellerId
+
+          chrome.runtime.sendMessage( //使用taokezhushou api 获取店铺优惠券 activity_id
+            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+urlUtils.getUrlParam('id')},
+            function(response_taoke){
+              if("ok"==response_taoke.msg && 200==response_taoke.data.status &&response_taoke.data.data.length > 0){
+                for(var i = 0 ; i<response_taoke.data.data.length; i++){
+                  var activity_id = response_taoke.data.data[i]["activity_id"];
+                  chrome.runtime.sendMessage({type:"gajax",url:"http://shop.m.taobao.com/shop/coupon.htm?seller_id="+sellerId+"&activity_id="+activity_id},
+                    function(response_coupon){
+                      if("ok"==response_coupon.msg){
+                        var pageData=response_coupon.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
+                        
+                      }
+                    });
+                }
+              }else{
+                console.log("该商品没有优惠券！");
+              }
+            }
+          )
+        }
+      });
+  },
+  //componentWillMount会在组件render之前执行，并且永远都只执行一次。
+  componentWillMount: function componentWillMount(){
+    this.getCouponInfo();
+  },
+  //这个方法会在组件加载完毕之后立即执行。在这个时候之后组件已经生成了对应的DOM结构，可以通过this.getDOMNode()来进行访问。
+  componentDidMount: function componentDidMount() {
+    //this.interval = setInterval(this.tick, 1000);
+  },
+  //在组件从DOM unmount后立即执行.
+  componentWillUnmount: function componentWillUnmount() {
+    //clearInterval(this.interval);
+  },
+  render: function render() {
+    return React.createElement(
+      "span",
+      {id:'fali_head_coupon_count'},
+      this.state.couponCount,
+      "张"
+    );
+  }
+});
+var fali_head_coupon_title = React.DOM.span({id:'fali_head_coupon_title'},'优惠券',React.createElement(fali_head_coupon_count, null));
 var fali_head_coupon = React.DOM.div({id:'fali_head_coupon',className:'no-left-border'},fali_head_coupon_title);
 
 //fali_head_simple_fanli start 普通返利界面开始
@@ -206,7 +267,10 @@ var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi,fa
 var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},'fali_content');
 
 //fali_float_qushi div start,浮动显示价格趋势的div块，是fali_wrapper的子块
-var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'},'fali_float_qushi');
+var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'});
+
+//fali_float_qq_donate div start,浮动显示qq群和捐助的div块，是fali_wrapper的子块
+var fali_float_coupon = React.DOM.div({id:'fali_float_coupon'},'fali_float_coupon');
 
 //fali_float_simple_fanli div start,浮动显示普通返利的div块，是fali_wrapper的子块
 var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},'fali_float_simple_fanli');
@@ -214,14 +278,12 @@ var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},'fali
 //fali_float_high_fanli div start,浮动显示高额返利的div块，是fali_wrapper的子块
 var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},'fali_float_high_fanli');
 
-//fali_float_qq_donate div start,浮动显示qq群和捐助的div块，是fali_wrapper的子块
-var fali_float_qq_donate = React.DOM.div({id:'fali_float_qq_donate'},'fali_float_qq_donate');
 
 var faliElements = React.createClass({
   displayName: "faliElements",
 
   render: function render() {
-    return React.createElement("div",{id: 'fali_wrapper'},fali_head,fali_content,fali_float_qushi,fali_float_simple_fanli,fali_float_high_fanli,fali_float_qq_donate);   //创建fali_wrapper 包裹DIV
+    return React.createElement("div",{id: 'fali_wrapper'},fali_head,fali_content,fali_float_qushi,fali_float_coupon,fali_float_simple_fanli,fali_float_high_fanli);   //创建fali_wrapper 包裹DIV
   }
 });
 //根据淘宝，天猫，阿里旅行等网址不同，查找网页对应位置添加 DIV 区块。
