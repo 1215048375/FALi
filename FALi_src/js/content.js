@@ -29,7 +29,9 @@ $(function(){
   var allWidth = $("#fali_wrapper").width();
   $("#fali_head_high_fanli").width(allWidth * 0.26 - 6);
 
-  $("#fali_float_qushi").width(allWidth-2);
+  $("#fali_content").width(allWidth-3);
+  $("#fali_float_qushi").width(allWidth-3);
+  $("#fali_float_coupon").width(allWidth-3);
 
   $("#fali_head_qushi").hover(function(){
     $("#fali_float_qushi").show();
@@ -48,6 +50,10 @@ $(function(){
 
 });
 
+"use strict";
+var author_url = "http://www.quanweiwei.cn";  //作者主页
+var taokezhushou_url = "http://zhushou3.taokezhushou.com/"; //淘客助手API根网址
+
 //URL工具类通过页面URL获取参数信息
 var URLUtils = {
   //获取url中的参数
@@ -55,15 +61,14 @@ var URLUtils = {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
-  }
+  },
+  getItemId:function(){
+    return this.getUrlParam('id');
+  },
 };
 var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
 
 //获取各个数据，渲染网页
-"use strict";
-var author_url = "http://www.quanweiwei.cn";  //作者主页
-var taokezhushou_url = "http://zhushou3.taokezhushou.com/"; //淘客助手API根网址
-
 /***********fali_logo start***********/
 var fali_head_logo_a_div = React.DOM.div({id:'fali_head_logo_a_div'},"F•ALi");
 var fali_head_logo_a = React.DOM.a({href:author_url,target:'_blank'},fali_head_logo_a_div);
@@ -72,7 +77,7 @@ var fali_head_logo = React.DOM.div({id:'fali_head_logo'},fali_head_logo_a);
 
 /***********fali_qushi start 价格趋势开始***********/
 chrome.runtime.sendMessage(
-  {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getUrlParam('id')+".html"},
+  {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getItemId()+".html"},
   function(response){
     if("ok"== response.msg){
       var pageData=response.data.replace(/(\s{2,}|\n)/gim,""); //获取etao 页面代码，去掉空格
@@ -179,12 +184,10 @@ chrome.runtime.sendMessage(
         }
       }
     }
-
   });
 
 var fali_head_qushi_title = React.DOM.span({id:'fali_head_qushi_title'},'价格趋势');
 var fali_head_qushi = React.DOM.div({id:'fali_head_qushi',className:'no-left-border'},fali_head_qushi_title);
-
 
 /*************fali_head_coupon start 优惠券开始***********/
 
@@ -195,16 +198,14 @@ var fali_head_coupon_count = React.createClass({
     return { couponCount: 0 , couponContext:"正在获取优惠券，请稍候..." };
   },
   getCouponInfo: function getCouponInfo() { //获取优惠券信息
-    var couponCount = 0;
     chrome.runtime.sendMessage( //1.获取sellerId
       {type:"gajax",url:window.location.href},
       function(response_item){
         if("ok"==response_item.msg){
           var pageData=response_item.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
           var sellerId = pageData.match(/sellerId=(\d+)&/im)[1]; //获取 sellerId
-
           chrome.runtime.sendMessage( //使用taokezhushou api 获取店铺优惠券 activity_id
-            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+urlUtils.getUrlParam('id')},
+            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+urlUtils.getItemId()},
             function(response_taoke){
               if("ok"==response_taoke.msg && 200==response_taoke.data.status &&response_taoke.data.data.length > 0){
                 for(var i = 0 ; i<response_taoke.data.data.length; i++){
@@ -213,10 +214,65 @@ var fali_head_coupon_count = React.createClass({
                     function(response_coupon){
                       if("ok"==response_coupon.msg){
                         var pageData=response_coupon.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
-                        
+                        var reg = new RegExp("已领用");
+                        if(reg.test(response_coupon.data)){ //有优惠券可用
+                          var regdata = new RegExp('<dt>(.*?)元优惠券</dt><dd>剩<span class="rest">(.*?)</span>张（已领用<span class="count">(.*?)</span>张）</dd><dd>单笔满(.*?)元可用，每人限领(.*?) 张</dd><dd>有效期:(.*?)至(.*?)</dd>');
+                          var coupon_info_array = regdata.exec(pageData);
+                          console.log(coupon_info_array);
+
+                          var fali_float_coupon_table_tbody_tr_td07 = React.DOM.td({width:'12%'},'链接');
+                          var fali_float_coupon_table_tbody_tr_td06 = React.DOM.td({width:'12%'},'领取');
+                          var fali_float_coupon_table_tbody_tr_td05 = React.DOM.td({width:'12%'},'限领');
+                          var fali_float_coupon_table_tbody_tr_td04 = React.DOM.td({width:'12%'},'剩余');
+                          var fali_float_coupon_table_tbody_tr_td03 = React.DOM.td({width:'12%'},'已领');
+                          var fali_float_coupon_table_tbody_tr_td02 = React.DOM.td({width:'20%'},'有效期');
+                          var fali_float_coupon_table_tbody_tr_td01 = React.DOM.td({width:'20%'},'优惠券');
+
+                          var couponItem = React.createClass({
+                            displayName: "couponItem",
+
+                            render: function render() {
+                                return  React.createElement(
+                                  "tr",
+                                  null,
+                                  fali_float_coupon_table_tbody_tr_td01,
+                                  fali_float_coupon_table_tbody_tr_td02,
+                                  fali_float_coupon_table_tbody_tr_td03,
+                                  fali_float_coupon_table_tbody_tr_td04,
+                                  fali_float_coupon_table_tbody_tr_td05,
+                                  fali_float_coupon_table_tbody_tr_td06,
+                                  fali_float_coupon_table_tbody_tr_td07
+                                  );
+                                }
+                            });
+
+                            var couponItems = React.createClass({
+                              displayName: "couponItems",
+
+                              render: function render() {
+                                  return  React.createElement(
+                                    "tr",
+                                    null,
+                                    fali_float_coupon_table_tbody_tr_td01,
+                                    fali_float_coupon_table_tbody_tr_td02,
+                                    fali_float_coupon_table_tbody_tr_td03,
+                                    fali_float_coupon_table_tbody_tr_td04,
+                                    fali_float_coupon_table_tbody_tr_td05,
+                                    fali_float_coupon_table_tbody_tr_td06,
+                                    fali_float_coupon_table_tbody_tr_td07
+                                    );
+                                  }
+                              });
+
+                            ReactDOM.render(React.createElement(couponItems), document.getElementById('fali_float_coupon_table_tbody'));
+
+                        }else{//无优惠券可用 返回DELETE给API 删除 activity_id
+                          chrome.runtime.sendMessage({type:"pajax",postdata:{_method:"DELETE"},url:taokezhushou_url+"api/v1/coupons_base/"+activity_id})
+                        }
                       }
                     });
                 }
+
               }else{
                 console.log("该商品没有优惠券！");
               }
@@ -231,11 +287,11 @@ var fali_head_coupon_count = React.createClass({
   },
   //这个方法会在组件加载完毕之后立即执行。在这个时候之后组件已经生成了对应的DOM结构，可以通过this.getDOMNode()来进行访问。
   componentDidMount: function componentDidMount() {
-    //this.interval = setInterval(this.tick, 1000);
+
   },
   //在组件从DOM unmount后立即执行.
   componentWillUnmount: function componentWillUnmount() {
-    //clearInterval(this.interval);
+
   },
   render: function render() {
     return React.createElement(
@@ -270,7 +326,20 @@ var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},'
 var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'});
 
 //fali_float_qq_donate div start,浮动显示qq群和捐助的div块，是fali_wrapper的子块
-var fali_float_coupon = React.DOM.div({id:'fali_float_coupon'},'fali_float_coupon');
+var fali_float_coupon_table_thead_tr_th07 = React.DOM.th({width:'12%'},'链接');
+var fali_float_coupon_table_thead_tr_th06 = React.DOM.th({width:'12%'},'领取');
+var fali_float_coupon_table_thead_tr_th05 = React.DOM.th({width:'12%'},'限领');
+var fali_float_coupon_table_thead_tr_th04 = React.DOM.th({width:'12%'},'剩余');
+var fali_float_coupon_table_thead_tr_th03 = React.DOM.th({width:'12%'},'已领');
+var fali_float_coupon_table_thead_tr_th02 = React.DOM.th({width:'20%'},'有效期');
+var fali_float_coupon_table_thead_tr_th01 = React.DOM.th({width:'20%'},'优惠券');
+var fali_float_coupon_table_thead_tr = React.DOM.tr(null,fali_float_coupon_table_thead_tr_th01,fali_float_coupon_table_thead_tr_th02,
+fali_float_coupon_table_thead_tr_th03,fali_float_coupon_table_thead_tr_th04,fali_float_coupon_table_thead_tr_th05,fali_float_coupon_table_thead_tr_th06,fali_float_coupon_table_thead_tr_th07);
+
+var fali_float_coupon_table_thead = React.DOM.thead({id:'fali_float_coupon_table_thead'},fali_float_coupon_table_thead_tr);
+var fali_float_coupon_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'});
+var fali_float_coupon_table = React.DOM.table({width:'98%'},fali_float_coupon_table_thead,fali_float_coupon_table_tbody);
+var fali_float_coupon = React.DOM.div({id:'fali_float_coupon'},fali_float_coupon_table);
 
 //fali_float_simple_fanli div start,浮动显示普通返利的div块，是fali_wrapper的子块
 var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},'fali_float_simple_fanli');

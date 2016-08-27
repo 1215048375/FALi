@@ -17,6 +17,24 @@
   border-top: 1px solid #EB4F38;
   border-bottom: none;
 }
+#fali{
+   font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif!important;
+}
+#fali_wrapper table{
+  margin: 20px auto;
+  line-height: 1.5;
+  border-radius: 5px;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+#fali_wrapper th{
+  font-weight: 500;
+  color:#666;
+  text-align: center;
+  background:#F6F6F6;
+  padding:6px 10px;
+  border:1px solid #e9e9e9;
+}
 
 #fali_wrapper{
   position: relative;
@@ -51,12 +69,8 @@
 }
 #fali_head_qushi_title{
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPklEQVQ4T9WSMU7DQBBFZyykpCNITmpzAkwBcYcvgLM3CLkBNyDcAE6AuYExB0joHNH4CrQxUlKCQnaYMWzwJgbJJdt59/+3f/4aoeF6PT9VhM6RsWFDPyyU31np1hQRS0gtQERr3R64aXa/fUEJoNaEjYds398B/AjQJ4C495CNqpB51M8RwdvDd2+l2zcWoGoGgifOd1aFzKMgZvOQcH3cS55za4S5OvGBnDuJRqhDEWwMnAQJXhh4hRpG7mMWWyWKGcmZSCfGbAQGUt5GdOums8tiEHCwr4V/mS0IUKebzpTsWYAi6ieM88DRF2aujYB76KZZKCbp5yDJlzuAhQo8gLelObQE34AiCsa8T9KDzG8lqPuRthP8+i0dSIIPDcMS5HDkJJs2AhQqCPnN5QU4JFzzzON/BqgrscneJxdA8OyMld77AAAAAElFTkSuQmCC) left center no-repeat;
-  vertical-align: middle;
-  padding-top: 2px;
-  padding-bottom: 2px;
   padding-left: 19px;
 }
-
 #fali_float_qushi{
   height:350px;
   position: absolute;
@@ -75,11 +89,22 @@
 }
 #fali_head_coupon_title{
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABoUlEQVQ4T7WTQTIDURCG+38ZJTtZiK1xg9lglhwg8m5gnEBugBOIE+AEJnEAsRJlEzdgK6rELoyZX7+JSUVIUaXM6tXrfl//3X8P+vWQ8ocP/wugHKg8H5DtWSK/KPAgK28prRgcVltd9G24IZQLZLIjkg1ozNkk7DMAsunJsOcS3qQcVONu58kGFXce3Zf1LL4DFpBpBZ1xgLxdbF83+rX1hqqpT7Ww8RWg/Vbb3f3fGNLfCvcFsudyv3GBz8gYlUqvnYTzF1DJHl5WEpnzQaMKsTBjBnwWoumZYdMlJFm56R6PkjnwzEuUzyCTSMBGARorULtOhOxBUKFJW0vxTe/BrgZIvbxi9fzq8rEWRhm4IECgcAV+24LWo5wutbuRLtmd5iznAGfpRO+zXNDXcqlt2DQtWxo5/ki8V4D/I8AtUSJpRVjaLSQqMHfnyYZ+4hZqPJcResoFDvSq8hsrJ1pYH7jp55MldNsUAtRBHhGweRUy1vOuDqeVFwCD4g0ea2s2g7Ew6kLKQH8cnwYx1S7DLHaAIq77YXXAd1JCr4i/AyP61F8rEWqrAAAAAElFTkSuQmCC) left center no-repeat;
-  vertical-align: middle;
-  padding-top: 2px;
-  padding-bottom: 2px;
   padding-left: 19px;
 }
+#fali_float_coupon{
+  background:#FFFFFF;
+  position: absolute;
+  top:30px;
+  z-index: 99999999;
+  border:1px solid #dedede;
+  border-top: none;
+  border-bottom: 4px solid #EB4F38;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px #dddddd;
+  display:block;
+}
+
+
 #fali_head_simple_fanli{
   width: 24%;
 }
