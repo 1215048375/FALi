@@ -47,6 +47,7 @@
         "js/react.min.js",
         "js/react-dom.min.js",
         "js/react-with-addons.min.js",
+        "js/clipboard.min.js",
         "js/content.js"],
 		"css": ["css/style.css"]
 	}]

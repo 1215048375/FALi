@@ -45,7 +45,8 @@ chrome.runtime.onMessage.addListener(
                     success:function(data){
                         sendResponse({
                             msg: 'ok',
-                            data: data
+                            data: data,
+														url: request.url
                         });
                     },
                     error:function(data){
@@ -101,12 +102,12 @@ chrome.runtime.onMessage.addListener(
                     uuid: window.localStorage.uuid
                 });
                 return true;
-        }            
+        }
     }
 );
 
 chrome.alarms.create('notifications', {periodInMinutes: 10});
-chrome.alarms.onAlarm.addListener(function(alarm){	
+chrome.alarms.onAlarm.addListener(function(alarm){
 	switch(alarm.name){
 		case 'notifications':
             $.ajax({
@@ -137,4 +138,3 @@ chrome.notifications.onButtonClicked.addListener(function(bnotificationIdb){
 chrome.notifications.onClosed.addListener(function(bnotificationIdb){
     window.localStorage.removeItem(bnotificationIdb);
 });
-
