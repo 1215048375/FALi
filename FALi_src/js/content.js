@@ -274,6 +274,7 @@ var fali_head_coupon_count = React.createClass({
                 }
 
               }else{
+                $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
                 console.log("该商品没有优惠券！");
                 $("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该商品没有优惠券！</td></tr>");
               }
