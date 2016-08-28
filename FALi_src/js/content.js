@@ -510,10 +510,12 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
     //   }
     // });
 
-    var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.DOM.a({id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',target:'_blank',href:'http://pub.alimama.com/myunion.htm'},
-                                                                          '点击登录淘宝联盟后刷新本页面查看返利计划');
-    var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading_a);
-    var fali_float_simple_fanli_table_tbody_tr = React.DOM.tr(null,fali_float_simple_fanli_table_tbody_tr_td);
+      var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.DOM.a({id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',target:'_blank',href:'http://pub.alimama.com/myunion.htm'},
+                                                                            '点击登录淘宝联盟后刷新本页面查看返利计划');
+      var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading_a);
+      var fali_float_simple_fanli_table_tbody_tr = React.DOM.tr(null,fali_float_simple_fanli_table_tbody_tr_td);
+
+    //明天2016-08-29 使用createClass 创建fali_float_simple_fanli_table_tbody ，componentWillMount() 判断是否登录 根据 登录情况 进行渲染
     var fali_float_simple_fanli_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_simple_fanli_table_tbody_tr);
 
     var fali_float_simple_fanli_table = React.DOM.table({width:'100%'},fali_float_simple_fanli_table_thead,fali_float_simple_fanli_table_tbody);
