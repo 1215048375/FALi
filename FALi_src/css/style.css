@@ -38,6 +38,13 @@
 #fali_wrapper td{
   background: #FFFFFF;
 }
+#fali a,#detail #fali a{
+  text-decoration: none;
+  color:#EB4F38;
+}
+#fali a:hover,#detail #fali a:hover{
+  color:#c40000;
+}
 
 #fali_wrapper{
   position: relative;

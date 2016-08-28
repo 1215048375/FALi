@@ -62,6 +62,9 @@ $(function(){
     $("#fali_head_coupon").removeClass("fali_head_visited");
     $(this).hide();
   });
+
+  //复制链接
+  var clipboard = new Clipboard('.copy_url');
 });
 
 //"use strict";
@@ -69,7 +72,7 @@ var author_url = "http://www.quanweiwei.cn";  //作者主页
 var taokezhushou_url = "http://zhushou3.taokezhushou.com/"; //淘客助手API根网址
 
 //URL工具类通过页面URL获取参数信息
-var URLUtils = {
+var FALiUtils = {
   //获取url中的参数
   getUrlParam:function(name){
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
@@ -79,8 +82,16 @@ var URLUtils = {
   getItemId:function(){
     return this.getUrlParam('id');
   },
+  strCount: function(source_str,count_str) { //统计字符出现次数
+		// 用正则匹配将各个字符从字符串中替换掉，直接用正则匹配的match().length获取每个字符出现的次数
+		source_str = source_str.replace(/(\s{2,}|\n)/gim,"");//去除空格
+    var reg = new RegExp(count_str,"gim");
+    var result = source_str.match(reg).length;
+		return result;
+	}
+
 };
-var urlUtils = Object.create(URLUtils); //实例化urlUtils对象
+var faliUtils = Object.create(FALiUtils); //实例化FALiUtils对象
 
 //获取各个数据，渲染网页
 /***********fali_logo start***********/
@@ -91,7 +102,7 @@ var fali_head_logo = React.DOM.div({id:'fali_head_logo'},fali_head_logo_a);
 
 /***********fali_qushi start 价格趋势开始***********/
 chrome.runtime.sendMessage(
-  {type:"gajax",url:"http://s.etao.com/detail/"+urlUtils.getItemId()+".html"},
+  {type:"gajax",url:"http://s.etao.com/detail/"+faliUtils.getItemId()+".html"},
   function(response){
     if("ok"== response.msg){
       var pageData=response.data.replace(/(\s{2,}|\n)/gim,""); //获取etao 页面代码，去掉空格
@@ -219,15 +230,17 @@ var fali_head_coupon_count = React.createClass({
           var pageData=response_item.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
           var sellerId = pageData.match(/sellerId=(\d+)&/im)[1]; //获取 sellerId
           chrome.runtime.sendMessage( //使用taokezhushou api 获取店铺优惠券 activity_id
-            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+urlUtils.getItemId()},
+            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+faliUtils.getItemId()},
             function(response_taoke){
-              var tips= false;
+
               if("ok"==response_taoke.msg && 200==response_taoke.data.status &&response_taoke.data.data.length > 0){
-                var coupons_count = response_taoke.data.data.length;
-                $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
-                $("#fali_head_coupon_count").html(" "+ coupons_count +"张");
+                var coupons_count = response_taoke.data.data.length; //获取 activity_id 的数量 每个activity_id 代表一个优惠券名称
+                if(coupons_count > 0){
+                  $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
+                }
+
                 for(var i = 0 ; i<coupons_count; i++){
-                  activity_id = response_taoke.data.data[i]["activity_id"];
+                  var activity_id = response_taoke.data.data[i]["activity_id"];
                   console.log(activity_id);
                   chrome.runtime.sendMessage({type:"gajax",url:"http://shop.m.taobao.com/shop/coupon.htm?seller_id="+sellerId+"&activity_id="+activity_id},
                     function(response_coupon){
@@ -257,18 +270,15 @@ var fali_head_coupon_count = React.createClass({
                                                                       "<td width=\'11%\'>"+ "<a href=\""+ coupon_receive_url +"\" target=\"_blank\">领取</a>" + "</td>" +
                                                                       "<td width=\'11%\'>"+ "<a class=\"copy_url\" data-clipboard-text=\"" + coupon_receive_url + "\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
                                                                       "</tr>");
-                          //复制链接
-                          var clipboard = new Clipboard('.copy_url');
 
                         }else{//无优惠券可用 返回DELETE给API 删除 activity_id
                           chrome.runtime.sendMessage({type:"pajax",postdata:{_method:"DELETE"},url:taokezhushou_url+"api/v1/coupons_base/"+activity_id});
-
-                          if(false == tips){
-                            $("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该商品优惠券已经过期！</td></tr>");
-                            tips = true;
-                          }
-
+                          //$("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该张商品优惠券已经过期！</td></tr>");
                         }
+
+                        var source = $("#fali_float_coupon_table_tbody").html();
+                        var coupons_num = faliUtils.strCount(source,"领取");
+                        $("#fali_head_coupon_count").html(" "+ coupons_num +"张");  //修改优惠券标题中的 优惠券数量
                       }
                     });
                 }
@@ -342,7 +352,8 @@ fali_float_coupon_table_thead_tr_th03,fali_float_coupon_table_thead_tr_th04,fali
 var fali_float_coupon_table_thead = React.DOM.thead({id:'fali_float_coupon_table_thead'},fali_float_coupon_table_thead_tr);
 var fali_float_coupon_table_tbody_tr_td_getting_coupon = React.DOM.span({id:'fali_float_coupon_table_tbody_tr_td_getting_coupon'},'优惠券正在获取中');
 var fali_float_coupon_table_tbody_tr_td = React.DOM.td({id:'getting_coupon',colSpan:'8'},fali_float_coupon_table_tbody_tr_td_getting_coupon);
-var fali_float_coupon_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_coupon_table_tbody_tr_td);
+var fali_float_coupon_table_tbody_tr = React.DOM.tr(null,fali_float_coupon_table_tbody_tr_td);
+var fali_float_coupon_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_coupon_table_tbody_tr);
 var fali_float_coupon_table = React.DOM.table({width:'98%'},fali_float_coupon_table_thead,fali_float_coupon_table_tbody);
 var fali_float_coupon = React.DOM.div({id:'fali_float_coupon'},fali_float_coupon_table);
 
