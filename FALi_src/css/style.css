@@ -17,6 +17,9 @@
   border-top: 1px solid #EB4F38;
   border-bottom: none;
 }
+.clearfix{
+  clear: both;
+}
 #fali{
    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif!important;
 }
@@ -27,7 +30,10 @@
   border-collapse: collapse;
   border-spacing: 0;
 }
-#fali_wrapper th,#fali_wrapper td{
+#fali_wrapper table tbody tr:hover{
+  background: #eaf8fe;
+}
+#fali_wrapper th{
   font-weight: 500;
   color:#666;
   text-align: center;
@@ -36,7 +42,11 @@
   border:1px solid #e9e9e9;
 }
 #fali_wrapper td{
-  background: #FFFFFF;
+  font-weight: 500;
+  color:#666;
+  text-align: center;
+  padding:6px 10px;
+  border:1px solid #e9e9e9;
 }
 
 #fali a,#detail #fali a{
@@ -48,6 +58,7 @@
 }
 
 #fali_wrapper{
+  min-width: 480px;
   position: relative;
 }
 
@@ -125,7 +136,7 @@
 }
 
 #fali_head_simple_fanli{
-  width: 24%;
+  width: 25%;
 }
 #fali_head_simple_fanli_title{
   background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABGElEQVQ4T62TQVKDQBBF/x+ocptFyDY5gruw8wQSb6A5gdxAvAGeQLyBk1xAd7DzCLpVF7q0CqatAcRJxWBiZEFR9P+vu/kDsefFPf2oAS9RmIA42glmRAfLIm0As1B2MrfiQOfsAzwBGLda97nrtRkgokWZhKLurNrnx6Q0BxnImTtpB3iNpqmQ526RBnPjVQ/2naq8Q1G4XqmLXA0XRdyl8ByFGYlTK2JbdA1uE7feAVamENxDIfGBRwspgQkMuqREcDNa5Gd1M3tbX0FuYVTqe2I/HsqKYygTAzz5mkqAbKTzeX+MgsvaQFz8FPNvMQKQt8bIwR8BfcdL3gNdDJoVjqcx+L3fNqeSgmy4zLP/+Zm26bhJ8wlmtXQRxZ4TSQAAAABJRU5ErkJggg==) left center no-repeat;
@@ -141,7 +152,30 @@
   border-bottom: 4px solid #EB4F38;
   border-radius: 4px;
   box-shadow: 0 1px 2px #dddddd;
-  display:display;
+  display:block;
+}
+#fali_float_simple_fanli_content{
+  width: 96%;
+  margin: 15px auto;
+}
+#fali_float_simple_fanli_content_top{
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #dedede;
+}
+#fanli_fl_ul li{
+  line-height: 2em;
+  width: 50%;
+  float:left;
+}
+#fanli_fl_ul #fanli_fl_li02,#fanli_fl_ul #fanli_fl_li03{
+  width: 35%;
+  text-align: left;
+  padding-left: 15%;
+}
+#fanli_fl_li_fanliRate,#fanli_fl_li_fanliTotalNum,#fanli_fl_li_fanliTotalFee{
+  font-size: 16px;
+  font-weight: bolder;
+  color:#EB4F38;
 }
 
 #fali_head_high_fanli{

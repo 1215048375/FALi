@@ -27,10 +27,10 @@ $(function(){
 
   //渲染完页面后使用jQuery 调整宽度
   var allWidth = $("#fali_wrapper").width();
-  $("#fali_head_high_fanli").width(allWidth * 0.26 - 6);
+  $("#fali_head_high_fanli").width(allWidth * 0.25 - 6);
 
-  $("#fali_content").width(allWidth-3);
-  $("#fali_float_qushi,#fali_float_coupon,#fali_float_simple_fanli,#fali_float_high_fanli").width(allWidth-3);
+  $("#fali_content").width(allWidth-2);
+  $("#fali_float_qushi,#fali_float_coupon,#fali_float_simple_fanli,#fali_float_high_fanli").width(allWidth-2);
 
 
   $("#fali_head_qushi").hover(function(){
@@ -392,7 +392,143 @@ var fali_float_coupon_table = React.DOM.table({width:'98%'},fali_float_coupon_ta
 var fali_float_coupon = React.DOM.div({id:'fali_float_coupon'},fali_float_coupon_table);
 
 //fali_float_simple_fanli div start,浮动显示普通返利的div块，是fali_wrapper的子块
-var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},'fali_float_simple_fanli');
+var fali_float_simple_fanli_content_top = React.createClass({
+  displayName:"fali_float_simple_fanli_content_top",
+
+  getSimpleFanliInfo: function getSimpleFanliInfo() { //获取返利基本信息
+    chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/items/search.json?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&perPageSize=50"},
+    function(response_simplefanli){
+      //console.log(response_simplefanli.data.data.pageList[0]);
+      var new_fanliRate =  0; //普通返利比例
+      var new_fanliCommFee =  0; //单比返利金额
+      var new_fanliTotalNum =  0; //普通返利推广量
+      var new_fanliTotalFee =  0; //普通返利推广返利总金额
+
+      if("ok"==response_simplefanli.msg){
+        if(response_simplefanli.data.hasOwnProperty("data")&&response_simplefanli.data.data.hasOwnProperty("pageList")&&null!=response_simplefanli.data.data.pageList){
+          //console.log(response_simplefanli.data.data.pageList[0]);
+          new_fanliRate =  response_simplefanli.data.data.pageList[0].tkRate; //普通返利比例
+          new_fanliCommFee =  response_simplefanli.data.data.pageList[0].tkCommFee; //单比返利金额
+          new_fanliTotalNum =  response_simplefanli.data.data.pageList[0].totalNum; //普通返利推广量
+          new_fanliTotalFee =  response_simplefanli.data.data.pageList[0].totalFee; //普通返利推广返利总金额
+
+          $("#fali_head_simple_fanli_percent").html(" " + new_fanliRate + "%");
+        }
+      }
+      var fanli_fl_li_simplefanliUrl = "http://pub.alimama.com/promo/search/index.htm?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId());
+      var fanli_fl_li01 = React.DOM.li({id:'fanli_fl_li01'},"返利比例：",React.DOM.span({id:"fanli_fl_li_fanliRate"},new_fanliRate,"%"),"(￥",new_fanliCommFee,")");
+      var fanli_fl_li02 = React.DOM.li({id:'fanli_fl_li02'},"月返数量：",React.DOM.span({id:"fanli_fl_li_fanliTotalNum"},new_fanliTotalNum)," 件");
+      var fanli_fl_li03 = React.DOM.li({id:'fanli_fl_li03'},"月返金额：",React.DOM.span({id:"fanli_fl_li_fanliTotalFee"},new_fanliTotalFee)," 元");
+      var fanli_fl_li04 = React.DOM.li({id:'fanli_fl_li04'},"返利链接：",React.DOM.a({id:"fanli_fl_li_simplefanliUrl",href:fanli_fl_li_simplefanliUrl,target:"_blank"},"生成链接"));
+
+      var fanli_fl_ul = React.createClass({
+        displayName: "fanli_fl_ul",
+
+        render: function render() {
+          return React.createElement(
+            "ul",
+            {id:'fanli_fl_ul'},
+            fanli_fl_li01,
+            fanli_fl_li02,
+            fanli_fl_li04,
+            fanli_fl_li03
+          );
+        }
+      });
+
+      ReactDOM.render(React.createElement(fanli_fl_ul, null), document.getElementById('fali_float_simple_fanli_content_top'));
+
+    });
+  },
+  //componentWillMount会在组件render之前执行，并且永远都只执行一次。
+  componentWillMount: function componentWillMount(){
+    this.getSimpleFanliInfo();
+  },
+
+  //这个方法会在组件加载完毕之后立即执行。在这个时候之后组件已经生成了对应的DOM结构，可以通过this.getDOMNode()来进行访问。
+  componentDidMount: function componentDidMount() {
+
+  },
+
+  render: function render() {
+    return React.createElement(
+      "div",
+      {id:'fali_float_simple_fanli_content_top',className:'clearfix'}
+    );
+  }
+});
+//ReactDOM.render(React.createElement(fali_float_simple_fanli_content_top, null), document.getElementById('fali_float_simple_fanli_content_top'));
+
+var fali_float_simple_fanli_content_bottom = React.createClass({
+  displayName:"fali_float_simple_fanli_content_bottom",
+
+  getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
+    chrome.runtime.sendMessage({type:"gajax",url:""},
+    function(response_simplefanliplan){
+      if("ok"==response_simplefanliplan.msg){
+
+      }
+
+    });
+  },
+
+  //componentWillMount会在组件render之前执行，并且永远都只执行一次。
+  componentWillMount: function componentWillMount(){
+    this.getSimpleFanliPlanInfo();
+  },
+
+  render: function render() {
+    var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
+    var fali_float_simple_fanli_table_thead_tr_th06 = React.DOM.th({width:'10%'},'详情');
+    var fali_float_simple_fanli_table_thead_tr_th05 = React.DOM.th({width:'15%'},'单品返利');
+    var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'15%'},'平均返利');
+    var fali_float_simple_fanli_table_thead_tr_th03 = React.DOM.th({width:'15%'},'人工审核');
+    var fali_float_simple_fanli_table_thead_tr_th02 = React.DOM.th({width:'10%'},'类型');
+    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'25%'},'淘客返利计划');
+    var fali_float_simple_fanli_table_thead_tr = React.DOM.tr(null,fali_float_simple_fanli_table_thead_tr_th01,fali_float_simple_fanli_table_thead_tr_th02,
+    fali_float_simple_fanli_table_thead_tr_th03,fali_float_simple_fanli_table_thead_tr_th04,fali_float_simple_fanli_table_thead_tr_th05,fali_float_simple_fanli_table_thead_tr_th06,fali_float_simple_fanli_table_thead_tr_th07);
+
+    var fali_float_simple_fanli_table_thead = React.DOM.thead({id:'fali_float_simple_fanli_table_thead'},fali_float_simple_fanli_table_thead_tr);
+
+    var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.createClass({ //判断用户是否登录了淘宝联盟账号
+      displayName:"fali_float_simple_fanli_table_tbody_tr_td_loading_a",
+
+      componentWillMount: function componentWillMount(){
+      },
+
+      render: function render() {
+        var alimama_loginUrl = "http://pub.alimama.com/myunion.htm";
+        return React.createElement(
+          "a",
+          {id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',
+           target:'_blank',
+           href:alimama_loginUrl
+          },
+          '点击登录淘宝联盟后刷新本页面查看返利计划'
+        );
+      }
+    });
+
+    var fali_float_simple_fanli_table_tbody_tr_td_loading = React.DOM.span({id:'fali_float_simple_fanli_table_tbody_tr_td_loading'},React.createElement(fali_float_simple_fanli_table_tbody_tr_td_loading_a, null));
+    var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading);
+    var fali_float_simple_fanli_table_tbody_tr = React.DOM.tr(null,fali_float_simple_fanli_table_tbody_tr_td);
+    var fali_float_simple_fanli_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_simple_fanli_table_tbody_tr);
+
+    var fali_float_simple_fanli_table = React.DOM.table({width:'100%'},fali_float_simple_fanli_table_thead,fali_float_simple_fanli_table_tbody);
+
+    return React.createElement(
+      "div",
+      {id:'fali_float_simple_fanli_content_bottom',className:'clearfix'},
+      fali_float_simple_fanli_table
+    );
+  }
+});
+
+var fali_float_simple_fanli_content = React.DOM.div({id:'fali_float_simple_fanli_content'},
+                                                    React.createElement(fali_float_simple_fanli_content_top, null),
+                                                    React.createElement(fali_float_simple_fanli_content_bottom, null));
+
+var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},fali_float_simple_fanli_content);
 
 //fali_float_high_fanli div start,浮动显示高额返利的div块，是fali_wrapper的子块
 var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},'fali_float_high_fanli');
