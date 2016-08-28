@@ -290,17 +290,17 @@ var fali_head_coupon_count = React.createClass({
                           var coupon_receive = coupon_info_array[3]; //已领取数量
                           var coupon_applyAmount = coupon_info_array[4]; //满多少使用的金额
                           var coupon_limit = coupon_info_array[5]; //限领数量
-                          var coupon_startTime = coupon_info_array[6].replace(/\-/g,"/"); //优惠券开始使用日期
-                          var coupon_endTime = coupon_info_array[7].replace(/\-/g,"/"); //优惠券到期日期
+                          var coupon_startTime = coupon_info_array[6].replace(/\-/g,"/").substr(5); //优惠券开始使用日期
+                          var coupon_endTime = coupon_info_array[7].replace(/\-/g,"/").substr(5); //优惠券到期日期
 
                           var coupon_receive_url = response_coupon.url;
 
                           $("#fali_float_coupon_table_tbody").append("<tr>"+
-                                                                      "<td width=\'20%\'>"+ "满" + coupon_applyAmount + "减" + coupon_amount + "</td>"+
-                                                                      "<td width=\'25%\'>"+ coupon_startTime +"~"+ coupon_endTime +"</td>"+
-                                                                      "<td width=\'11%\'>"+ coupon_receive + "</td>" +
-                                                                      "<td width=\'11%\'>"+ coupon_rest + "</td>" +
-                                                                      "<td width=\'11%\'>"+ coupon_limit + "</td>" +
+                                                                      "<td width=\'22%\'>"+ "满" + coupon_applyAmount + "减" + coupon_amount + "</td>"+
+                                                                      "<td width=\'22%\'>"+ coupon_startTime +" ~ "+ coupon_endTime +"</td>"+
+                                                                      "<td width=\'12%\'>"+ coupon_receive + "</td>" +
+                                                                      "<td width=\'12%\'>"+ coupon_rest + "</td>" +
+                                                                      "<td width=\'10%\'>"+ coupon_limit + "</td>" +
                                                                       "<td width=\'11%\'>"+ "<a href=\""+ coupon_receive_url +"\" target=\"_blank\">领取</a>" + "</td>" +
                                                                       "<td width=\'11%\'>"+ "<a class=\"copy_url\" data-clipboard-text=\"" + coupon_receive_url + "\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
                                                                       "</tr>");
@@ -375,11 +375,11 @@ var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'});
 //fali_float_qq_donate div start,浮动显示qq群和捐助的div块，是fali_wrapper的子块
 var fali_float_coupon_table_thead_tr_th07 = React.DOM.th({width:'11%'},'链接');
 var fali_float_coupon_table_thead_tr_th06 = React.DOM.th({width:'11%'},'领取');
-var fali_float_coupon_table_thead_tr_th05 = React.DOM.th({width:'11%'},'限领');
-var fali_float_coupon_table_thead_tr_th04 = React.DOM.th({width:'11%'},'剩余');
-var fali_float_coupon_table_thead_tr_th03 = React.DOM.th({width:'11%'},'已领');
-var fali_float_coupon_table_thead_tr_th02 = React.DOM.th({width:'25%'},'有效期');
-var fali_float_coupon_table_thead_tr_th01 = React.DOM.th({width:'20%'},'优惠券');
+var fali_float_coupon_table_thead_tr_th05 = React.DOM.th({width:'10%'},'限领');
+var fali_float_coupon_table_thead_tr_th04 = React.DOM.th({width:'12%'},'剩余');
+var fali_float_coupon_table_thead_tr_th03 = React.DOM.th({width:'12%'},'已领');
+var fali_float_coupon_table_thead_tr_th02 = React.DOM.th({width:'22%'},'有效期');
+var fali_float_coupon_table_thead_tr_th01 = React.DOM.th({width:'22%'},'优惠券');
 var fali_float_coupon_table_thead_tr = React.DOM.tr(null,fali_float_coupon_table_thead_tr_th01,fali_float_coupon_table_thead_tr_th02,
 fali_float_coupon_table_thead_tr_th03,fali_float_coupon_table_thead_tr_th04,fali_float_coupon_table_thead_tr_th05,fali_float_coupon_table_thead_tr_th06,fali_float_coupon_table_thead_tr_th07);
 
