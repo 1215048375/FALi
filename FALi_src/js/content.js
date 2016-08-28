@@ -320,12 +320,12 @@ var fali_head_coupon = React.DOM.div({id:'fali_head_coupon',className:'no-left-b
 
 //fali_head_simple_fanli start 普通返利界面开始
 var fali_head_simple_fanli_title = React.DOM.span({id:'fali_head_simple_fanli_title'},'普通返利');
-var fali_head_simple_fanli_percent = React.DOM.span({id:'fali_head_simple_fanli_percent'},'3%');
+var fali_head_simple_fanli_percent = React.DOM.span({id:'fali_head_simple_fanli_percent'},' 0%');
 var fali_head_simple_fanli = React.DOM.div({id:'fali_head_simple_fanli',className:'no-left-border'},fali_head_simple_fanli_title,fali_head_simple_fanli_percent);
 
 //fali_head_high_fanli start 高额返利界面开始
 var fali_head_high_fanli_title = React.DOM.span({id:'fali_head_high_fanli_title'},'高额返利');
-var fali_head_high_fanli_percent = React.DOM.span({id:'fali_head_high_fanli_percent'},'30%');
+var fali_head_high_fanli_percent = React.DOM.span({id:'fali_head_high_fanli_percent'},' 0%');
 var fali_head_high_fanli = React.DOM.div({id:'fali_head_high_fanli',className:'no-left-border'},fali_head_high_fanli_title,fali_head_high_fanli_percent);
 
 
