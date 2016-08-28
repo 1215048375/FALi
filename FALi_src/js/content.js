@@ -275,7 +275,7 @@ var fali_head_coupon_count = React.createClass({
 
                 for(var i = 0 ; i<coupons_count; i++){
                   var activity_id = response_taoke.data.data[i]["activity_id"];
-                  console.log(activity_id);
+                  //console.log(activity_id);
                   chrome.runtime.sendMessage({type:"gajax",url:"http://shop.m.taobao.com/shop/coupon.htm?seller_id="+sellerId+"&activity_id="+activity_id},
                     function(response_coupon){
                       if("ok"==response_coupon.msg){
@@ -463,6 +463,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
   displayName:"fali_float_simple_fanli_content_bottom",
 
   getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
+    console.log($("#fali_float_simple_fanli_table_tbody_tr_td_loading").html());
     chrome.runtime.sendMessage({type:"gajax",url:""},
     function(response_simplefanliplan){
       if("ok"==response_simplefanliplan.msg){
@@ -490,27 +491,28 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
 
     var fali_float_simple_fanli_table_thead = React.DOM.thead({id:'fali_float_simple_fanli_table_thead'},fali_float_simple_fanli_table_thead_tr);
 
-    var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.createClass({ //判断用户是否登录了淘宝联盟账号
-      displayName:"fali_float_simple_fanli_table_tbody_tr_td_loading_a",
+    // var fali_float_simple_fanli_table_tbody_tr_loading = React.createClass({ //判断用户是否登录了淘宝联盟账号
+    //   displayName:"fali_float_simple_fanli_table_tbody_tr_td_loading_a",
+    //
+    //   componentWillMount: function componentWillMount(){
+    //   },
+    //
+    //   render: function render() {
+    //     var alimama_loginUrl = "http://pub.alimama.com/myunion.htm";
+    //     return React.createElement(
+    //       "a",
+    //       {id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',
+    //        target:'_blank',
+    //        href:alimama_loginUrl
+    //       },
+    //       '点击登录淘宝联盟后刷新本页面查看返利计划'
+    //     );
+    //   }
+    // });
 
-      componentWillMount: function componentWillMount(){
-      },
-
-      render: function render() {
-        var alimama_loginUrl = "http://pub.alimama.com/myunion.htm";
-        return React.createElement(
-          "a",
-          {id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',
-           target:'_blank',
-           href:alimama_loginUrl
-          },
-          '点击登录淘宝联盟后刷新本页面查看返利计划'
-        );
-      }
-    });
-
-    var fali_float_simple_fanli_table_tbody_tr_td_loading = React.DOM.span({id:'fali_float_simple_fanli_table_tbody_tr_td_loading'},React.createElement(fali_float_simple_fanli_table_tbody_tr_td_loading_a, null));
-    var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading);
+    var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.DOM.a({id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',target:'_blank',href:'http://pub.alimama.com/myunion.htm'},
+                                                                          '点击登录淘宝联盟后刷新本页面查看返利计划');
+    var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading_a);
     var fali_float_simple_fanli_table_tbody_tr = React.DOM.tr(null,fali_float_simple_fanli_table_tbody_tr_td);
     var fali_float_simple_fanli_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_simple_fanli_table_tbody_tr);
 
