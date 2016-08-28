@@ -126,7 +126,16 @@
 #fali_head_simple_fanli{
   width: 24%;
 }
+#fali_head_simple_fanli_title{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABGElEQVQ4T62TQVKDQBBF/x+ocptFyDY5gruw8wQSb6A5gdxAvAGeQLyBk1xAd7DzCLpVF7q0CqatAcRJxWBiZEFR9P+vu/kDsefFPf2oAS9RmIA42glmRAfLIm0As1B2MrfiQOfsAzwBGLda97nrtRkgokWZhKLurNrnx6Q0BxnImTtpB3iNpqmQ526RBnPjVQ/2naq8Q1G4XqmLXA0XRdyl8ByFGYlTK2JbdA1uE7feAVamENxDIfGBRwspgQkMuqREcDNa5Gd1M3tbX0FuYVTqe2I/HsqKYygTAzz5mkqAbKTzeX+MgsvaQFz8FPNvMQKQt8bIwR8BfcdL3gNdDJoVjqcx+L3fNqeSgmy4zLP/+Zm26bhJ8wlmtXQRxZ4TSQAAAABJRU5ErkJggg==) left center no-repeat;
+  padding-left: 19px;
+}
+
 
 #fali_head_high_fanli{
   border-top-right-radius: 4px;
+}
+#fali_head_high_fanli_title{
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABSklEQVQ4T6WTQW7CMBBF/yR0XZAg28IN0kVVL7lAIZyg9Aa9QTlCblB6ghq4AEvTLhpO0KwJEmFXqY0HOSgQAYlA9caW9ed5ZvyH8M9FJn7h3blg+52A5jk8BkJQ0nPkZ5ACoq4IAdycE5xpDMQZqVYG4ONgXgN0vb3Pn/fKxkhRAYDjxmhWM6VdwY5rUoVRVxw9UgIASOOpPlHDtMSOGIDwcphlWQZraAxgU5AGJezCwmBf0hZVCGBKbk3q+Rd/kVSJ7a/83UkAM96cseob4bJz7zMorlg/fk0G8aIjhkR4zCAnAaR1rz75kJEn2qyRgsjCsCHVdPkg+mzhtRRQIbRM11Nzafs5FVuJb0yz8kTzj/FdCjD1G7ERrTy3anaTfubYfB/KvnFa4Mp2URMvtzLz3BnP3N0wEdvy3Hlg5jks3d8N0yVDdKjdAKTtphHWU2P5AAAAAElFTkSuQmCC) left center no-repeat;
+  padding-left: 19px;
 }
