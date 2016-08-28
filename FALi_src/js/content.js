@@ -30,8 +30,8 @@ $(function(){
   $("#fali_head_high_fanli").width(allWidth * 0.26 - 6);
 
   $("#fali_content").width(allWidth-3);
-  $("#fali_float_qushi").width(allWidth-3);
-  $("#fali_float_coupon").width(allWidth-3);
+  $("#fali_float_qushi,#fali_float_coupon,#fali_float_simple_fanli,#fali_float_high_fanli").width(allWidth-3);
+
 
   $("#fali_head_qushi").hover(function(){
     $("#fali_float_qushi").show();
@@ -48,6 +48,7 @@ $(function(){
     $(this).hide();
   });
 
+
   $("#fali_head_coupon").hover(function(){
     $("#fali_float_coupon").show();
     $(this).addClass("fali_head_visited");
@@ -62,6 +63,39 @@ $(function(){
     $("#fali_head_coupon").removeClass("fali_head_visited");
     $(this).hide();
   });
+
+
+  $("#fali_head_simple_fanli").hover(function(){
+    $("#fali_float_simple_fanli").show();
+    $(this).addClass("fali_head_visited");
+  },function(){
+    $("#fali_float_simple_fanli").hide();
+    $(this).removeClass("fali_head_visited");
+  });
+  $("#fali_float_simple_fanli").hover(function(){
+    $("#fali_head_simple_fanli").addClass("fali_head_visited");
+    $(this).show();
+  },function(){
+    $("#fali_head_simple_fanli").removeClass("fali_head_visited");
+    $(this).hide();
+  });
+
+
+  $("#fali_head_high_fanli").hover(function(){
+    $("#fali_float_high_fanli").show();
+    $(this).addClass("fali_head_visited");
+  },function(){
+    $("#fali_float_high_fanli").hide();
+    $(this).removeClass("fali_head_visited");
+  });
+  $("#fali_float_high_fanli").hover(function(){
+    $("#fali_head_high_fanli").addClass("fali_head_visited");
+    $(this).show();
+  },function(){
+    $("#fali_head_high_fanli").removeClass("fali_head_visited");
+    $(this).hide();
+  });
+
 
   //复制链接
   var clipboard = new Clipboard('.copy_url');
