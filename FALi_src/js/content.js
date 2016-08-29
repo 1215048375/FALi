@@ -507,7 +507,29 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                   var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId; //shopkeeperId
                   var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;   //计划ID
                   var campaignType = response_simplefanli.data.data.campaignList[i].campaignType; //计划类型
+                  switch (campaignType) {
+                    case 1:
+                      campaignType = '通用';
+                      break;
+                    case 2:
+                      campaignType = '定向';
+                      break;
+                    default:
 
+                  }
+                  //campaignId ＝＝ 0 为通用计划
+                  if(0 == campaignId ){
+                    $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
+                                                                "<td width=\'22%\'>"+ planName + "</td>"+
+                                                                "<td width=\'10%\'>"+ campaignType +"</td>"+
+                                                                "<td width=\'15%\'>"+ "否" + "</td>" +
+                                                                "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
+                                                                "<td width=\'16%\'>"+ $("#fali_head_simple_fanli_percent").html() + "</td>" +
+                                                                "<td width=\'10%\'>"+ "<a href=\"#\" target=\"_blank\">领取</a>" + "</td>" +
+                                                                "<td width=\'10%\'>"+ "<a class=\"copy_url\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
+                                                                "</tr>");
+                  }
+                  
                   chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId},
                       function(response){
                         console.log(response);
