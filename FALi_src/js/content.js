@@ -394,7 +394,7 @@ var fali_float_simple_fanli_content_top = React.createClass({
   getSimpleFanliInfo: function getSimpleFanliInfo() { //获取返利基本信息
     chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/items/search.json?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&perPageSize=50"},
     function(response_simplefanli){
-      //console.log(response_simplefanli.data.data.pageList[0]);
+      //console.log(response_simplefanli);
       var new_fanliRate =  0; //普通返利比例
       var new_fanliCommFee =  0; //单比返利金额
       var new_fanliTotalNum =  0; //普通返利推广量
@@ -409,7 +409,9 @@ var fali_float_simple_fanli_content_top = React.createClass({
           new_fanliTotalFee =  response_simplefanli.data.data.pageList[0].totalFee; //普通返利推广返利总金额
           var tkSpecialCampaignIdRateMap = response_simplefanli.data.data.pageList[0].tkSpecialCampaignIdRateMap;
 
-          $("#fali_float_simple_fanli_content_bottom").append("<span id=\"campaigns_id\" style=\"display:none\">"+JSON.stringify(tkSpecialCampaignIdRateMap)+"</span>");
+          //$("#fali_head_simple_fanli").append("<span id=\"current_fanliRate\" style=\"display:none\">"+new_fanliRate.toString()+"</span>");
+          //$("#fali_head_simple_fanli").append("<span id=\"campaigns_id\" style=\"display:none\">"+JSON.stringify(tkSpecialCampaignIdRateMap)+"</span>");
+
           $("#fali_head_simple_fanli_percent").html(" " + new_fanliRate + "%");
         }
       }
@@ -460,20 +462,20 @@ var fali_float_simple_fanli_content_top = React.createClass({
 var fali_float_simple_fanli_content_bottom = React.createClass({
   displayName:"fali_float_simple_fanli_content_bottom",
 
-  getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
-    chrome.runtime.sendMessage({type:"gajax",url:""},
-    function(response_simplefanliplan){
-      if("ok"==response_simplefanliplan.msg){
-
-      }
-
-    });
-  },
-
-  //componentWillMount会在组件render之前执行，并且永远都只执行一次。
-  componentWillMount: function componentWillMount(){
-    this.getSimpleFanliPlanInfo();
-  },
+  // getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
+  //   chrome.runtime.sendMessage({type:"gajax",url:""},
+  //   function(response_simplefanliplan){
+  //     if("ok"==response_simplefanliplan.msg){
+  //
+  //     }
+  //
+  //   });
+  // },
+  //
+  // //componentWillMount会在组件render之前执行，并且永远都只执行一次。
+  // componentWillMount: function componentWillMount(){
+  //   this.getSimpleFanliPlanInfo();
+  // },
 
   render: function render() {
     var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
@@ -496,45 +498,75 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
         chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/shopdetail/campaigns.json?oriMemberId="+faliUtils.getSellerId()+"&_input_charset=utf-8"},
         function(response_simplefanli){
           if("ok"==response_simplefanli.msg){
-            console.log(response_simplefanli);
+            //console.log(response_simplefanli);
             if(false != response_simplefanli.data.hasOwnProperty("info")){ //已登陆淘宝联盟
               if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
                 //有返利计划
                 $("#fali_float_simple_fanli_table_tbody_tr").remove();
-                for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
-                  var planName = response_simplefanli.data.data.campaignList[i].campaignName;  //计划名称
-                  var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString; //平均返利比例
-                  var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId; //shopkeeperId
-                  var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;   //计划ID
-                  var campaignType = response_simplefanli.data.data.campaignList[i].campaignType; //计划类型
-                  switch (campaignType) {
-                    case 1:
-                      campaignType = '通用';
-                      break;
-                    case 2:
-                      campaignType = '定向';
-                      break;
-                    default:
 
+                chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/items/search.json?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&perPageSize=50"},
+                function(response){
+
+                  if("ok"==response.msg){
+                    if(response.data.hasOwnProperty("data")&&response.data.data.hasOwnProperty("pageList")&&null!=response.data.data.pageList){
+
+                      var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
+                      var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;
+
+
+
+                      var campaignInfo = new Array();
+                      for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
+                        var planName = response_simplefanli.data.data.campaignList[i].campaignName;  //计划名称
+                        var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString; //平均返利比例
+                        var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId; //shopkeeperId
+                        var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;   //计划ID
+                        var campaignType = response_simplefanli.data.data.campaignList[i].campaignType; //计划类型
+                        switch (campaignType) {
+                          case 1:
+                            campaignType = '通用';
+                            break;
+                          case 2:
+                            campaignType = '定向';
+                            break;
+                          default:
+                            break;
+
+                        }
+                        //campaignId ＝＝ 0 为通用计划
+                        if(0 == campaignId ){
+                          var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
+                          $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
+                                                                      "<td width=\'22%\'>"+ planName + "</td>"+
+                                                                      "<td width=\'10%\'>"+ campaignType +"</td>"+
+                                                                      "<td width=\'15%\'>"+ "否" + "</td>" +
+                                                                      "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
+                                                                      "<td width=\'16%\'>"+ new_fanliRate + "%</td>" +
+                                                                      "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
+                                                                      "<td width=\'10%\'> - </td>" +
+                                                                      "</tr>");
+                        }else{
+                          campaignInfo.push({data:{campaignId:campaignId,campaignName:planName,campaignType:campaignType,avgfanliRate:avgfanliRate,shopKeeperId:shopKeeperId}});
+                          //console.log(campaignInfo);
+                        }
+                      }
+                        console.log(campaignInfo);
+                        for(var campaignItemId in tkSpecialCampaignIdRateMap){
+                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId},
+                              function(response){
+                                console.log(response);
+                              });
+                        }
+
+
+
+
+
+                    }
                   }
-                  //campaignId ＝＝ 0 为通用计划
-                  if(0 == campaignId ){
-                    $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
-                                                                "<td width=\'22%\'>"+ planName + "</td>"+
-                                                                "<td width=\'10%\'>"+ campaignType +"</td>"+
-                                                                "<td width=\'15%\'>"+ "否" + "</td>" +
-                                                                "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
-                                                                "<td width=\'16%\'>"+ $("#fali_head_simple_fanli_percent").html() + "</td>" +
-                                                                "<td width=\'10%\'>"+ "<a href=\"#\" target=\"_blank\">领取</a>" + "</td>" +
-                                                                "<td width=\'10%\'>"+ "<a class=\"copy_url\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
-                                                                "</tr>");
-                  }
-                  
-                  chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId},
-                      function(response){
-                        console.log(response);
-                      });
-                }
+                });
+
+
 
               }else{
                 //没有返利计划
