@@ -407,7 +407,9 @@ var fali_float_simple_fanli_content_top = React.createClass({
           new_fanliCommFee =  response_simplefanli.data.data.pageList[0].tkCommFee; //单比返利金额
           new_fanliTotalNum =  response_simplefanli.data.data.pageList[0].totalNum; //普通返利推广量
           new_fanliTotalFee =  response_simplefanli.data.data.pageList[0].totalFee; //普通返利推广返利总金额
+          var tkSpecialCampaignIdRateMap = response_simplefanli.data.data.pageList[0].tkSpecialCampaignIdRateMap;
 
+          $("#fali_float_simple_fanli_content_bottom").append("<span id=\"campaigns_id\" style=\"display:none\">"+JSON.stringify(tkSpecialCampaignIdRateMap)+"</span>");
           $("#fali_head_simple_fanli_percent").html(" " + new_fanliRate + "%");
         }
       }
@@ -500,12 +502,16 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                 //有返利计划
                 $("#fali_float_simple_fanli_table_tbody_tr").remove();
                 for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
-                  var planName = response_simplefanli.data.data.campaignList[i].campaignName;
-                  var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString;
-                  var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId;
-                  var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;
-                  var campaignType = response_simplefanli.data.data.campaignList[i].campaignType;
-                  console.log(planName + "-" +campaignType);
+                  var planName = response_simplefanli.data.data.campaignList[i].campaignName;  //计划名称
+                  var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString; //平均返利比例
+                  var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId; //shopkeeperId
+                  var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;   //计划ID
+                  var campaignType = response_simplefanli.data.data.campaignList[i].campaignType; //计划类型
+
+                  chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId},
+                      function(response){
+                        console.log(response);
+                      });
                 }
 
               }else{
