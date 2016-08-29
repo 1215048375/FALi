@@ -504,6 +504,8 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                   var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString;
                   var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId;
                   var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;
+                  var campaignType = response_simplefanli.data.data.campaignList[i].campaignType;
+                  console.log(planName + "-" +campaignType);
                 }
 
               }else{
