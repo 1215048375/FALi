@@ -476,11 +476,11 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
   render: function render() {
     var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
     var fali_float_simple_fanli_table_thead_tr_th06 = React.DOM.th({width:'10%'},'详情');
-    var fali_float_simple_fanli_table_thead_tr_th05 = React.DOM.th({width:'15%'},'单品返利');
-    var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'15%'},'平均返利');
+    var fali_float_simple_fanli_table_thead_tr_th05 = React.DOM.th({width:'16%'},'单品返利');
+    var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'16%'},'平均返利');
     var fali_float_simple_fanli_table_thead_tr_th03 = React.DOM.th({width:'15%'},'人工审核');
     var fali_float_simple_fanli_table_thead_tr_th02 = React.DOM.th({width:'10%'},'类型');
-    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'25%'},'返利计划');
+    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'23%'},'返利计划');
     var fali_float_simple_fanli_table_thead_tr = React.DOM.tr(null,fali_float_simple_fanli_table_thead_tr_th01,fali_float_simple_fanli_table_thead_tr_th02,
     fali_float_simple_fanli_table_thead_tr_th03,fali_float_simple_fanli_table_thead_tr_th04,fali_float_simple_fanli_table_thead_tr_th05,fali_float_simple_fanli_table_thead_tr_th06,fali_float_simple_fanli_table_thead_tr_th07);
 
@@ -499,6 +499,12 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
               if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
                 //有返利计划
                 $("#fali_float_simple_fanli_table_tbody_tr").remove();
+                for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
+                  var planName = response_simplefanli.data.data.campaignList[i].campaignName;
+                  var avgfanliRate = response_simplefanli.data.data.campaignList[i].avgCommissionToString;
+                  var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId;
+                  var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;
+                }
 
               }else{
                 //没有返利计划
