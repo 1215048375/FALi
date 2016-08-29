@@ -122,7 +122,12 @@ var FALiUtils = {
     var reg = new RegExp(count_str,"gim");
     var result = source_str.match(reg).length;
 		return result;
-	}
+	},
+  getSellerId:function(){
+    var pageData = $(document.body).html(); //获取本页面源码
+    var sellerId = pageData.match(/sellerId=(\d+)&/im)[1];
+    return sellerId;
+  }
 
 };
 var faliUtils = Object.create(FALiUtils); //实例化FALiUtils对象
@@ -257,75 +262,66 @@ var fali_head_coupon_count = React.createClass({
     return { couponCount: 0};
   },
   getCouponInfo: function getCouponInfo() { //获取优惠券信息
-    chrome.runtime.sendMessage( //1.获取sellerId
-      {type:"gajax",url:window.location.href},
-      function(response_item){
-        if("ok"==response_item.msg){
-          var pageData=response_item.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
-          var sellerId = pageData.match(/sellerId=(\d+)&/im)[1]; //获取 sellerId
-          chrome.runtime.sendMessage( //使用taokezhushou api 获取店铺优惠券 activity_id
-            {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+sellerId+"?item_id="+faliUtils.getItemId()},
-            function(response_taoke){
+    chrome.runtime.sendMessage( //使用taokezhushou api 获取店铺优惠券 activity_id
+      {type:"gajax",url:taokezhushou_url+"api/v1/coupons_base/"+faliUtils.getSellerId()+"?item_id="+faliUtils.getItemId()},
+      function(response_taoke){
 
-              if("ok"==response_taoke.msg && 200==response_taoke.data.status &&response_taoke.data.data.length > 0){
-                var coupons_count = response_taoke.data.data.length; //获取 activity_id 的数量 每个activity_id 代表一个优惠券名称
-                if(coupons_count > 0){
-                  $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
+        if("ok"==response_taoke.msg && 200==response_taoke.data.status &&response_taoke.data.data.length > 0){
+          var coupons_count = response_taoke.data.data.length; //获取 activity_id 的数量 每个activity_id 代表一个优惠券名称
+          if(coupons_count > 0){
+            $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
+          }
+
+          for(var i = 0 ; i<coupons_count; i++){
+            var activity_id = response_taoke.data.data[i]["activity_id"];
+            //console.log(activity_id);
+            chrome.runtime.sendMessage({type:"gajax",url:"http://shop.m.taobao.com/shop/coupon.htm?seller_id="+faliUtils.getSellerId()+"&activity_id="+activity_id},
+              function(response_coupon){
+                if("ok"==response_coupon.msg){
+                  var pageData=response_coupon.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
+                  var reg = new RegExp("已领用");
+                  if(reg.test(response_coupon.data)){ //有优惠券可用
+                    var regdata = new RegExp('<dt>(.*?)元优惠券</dt><dd>剩<span class="rest">(.*?)</span>张（已领用<span class="count">(.*?)</span>张）</dd><dd>单笔满(.*?)元可用，每人限领(.*?) 张</dd><dd>有效期:(.*?)至(.*?)</dd>');
+                    var coupon_info_array = regdata.exec(pageData);
+
+                    var coupon_amount = coupon_info_array[1]; //优惠券金额
+                    var coupon_rest = coupon_info_array[2]; //优惠券剩余数量
+                    var coupon_receive = coupon_info_array[3]; //已领取数量
+                    var coupon_applyAmount = coupon_info_array[4]; //满多少使用的金额
+                    var coupon_limit = coupon_info_array[5]; //限领数量
+                    var coupon_startTime = coupon_info_array[6].replace(/\-/g,"/").substr(5); //优惠券开始使用日期
+                    var coupon_endTime = coupon_info_array[7].replace(/\-/g,"/").substr(5); //优惠券到期日期
+
+                    var coupon_receive_url = response_coupon.url;
+
+                    $("#fali_float_coupon_table_tbody").append("<tr>"+
+                                                                "<td width=\'22%\'>"+ "满" + coupon_applyAmount + "减" + coupon_amount + "</td>"+
+                                                                "<td width=\'22%\'>"+ coupon_startTime +" ~ "+ coupon_endTime +"</td>"+
+                                                                "<td width=\'12%\'>"+ coupon_receive + "</td>" +
+                                                                "<td width=\'12%\'>"+ coupon_rest + "</td>" +
+                                                                "<td width=\'10%\'>"+ coupon_limit + "</td>" +
+                                                                "<td width=\'11%\'>"+ "<a href=\""+ coupon_receive_url +"\" target=\"_blank\">领取</a>" + "</td>" +
+                                                                "<td width=\'11%\'>"+ "<a class=\"copy_url\" data-clipboard-text=\"" + coupon_receive_url + "\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
+                                                                "</tr>");
+
+                  }else{//无优惠券可用 返回DELETE给API 删除 activity_id
+                    chrome.runtime.sendMessage({type:"pajax",postdata:{_method:"DELETE"},url:taokezhushou_url+"api/v1/coupons_base/"+activity_id});
+                    //$("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该张商品优惠券已经过期！</td></tr>");
+                  }
+
+                  var source = $("#fali_float_coupon_table_tbody").html();
+                  var coupons_num = faliUtils.strCount(source,"领取");
+                  $("#fali_head_coupon_count").html(" "+ coupons_num +"张");  //修改优惠券标题中的 优惠券数量
                 }
+              });
+          }
 
-                for(var i = 0 ; i<coupons_count; i++){
-                  var activity_id = response_taoke.data.data[i]["activity_id"];
-                  //console.log(activity_id);
-                  chrome.runtime.sendMessage({type:"gajax",url:"http://shop.m.taobao.com/shop/coupon.htm?seller_id="+sellerId+"&activity_id="+activity_id},
-                    function(response_coupon){
-                      if("ok"==response_coupon.msg){
-                        var pageData=response_coupon.data.replace(/(\s{2,}|\n)/gim,""); //获取 页面代码，去掉空格
-                        var reg = new RegExp("已领用");
-                        if(reg.test(response_coupon.data)){ //有优惠券可用
-                          var regdata = new RegExp('<dt>(.*?)元优惠券</dt><dd>剩<span class="rest">(.*?)</span>张（已领用<span class="count">(.*?)</span>张）</dd><dd>单笔满(.*?)元可用，每人限领(.*?) 张</dd><dd>有效期:(.*?)至(.*?)</dd>');
-                          var coupon_info_array = regdata.exec(pageData);
-
-                          var coupon_amount = coupon_info_array[1]; //优惠券金额
-                          var coupon_rest = coupon_info_array[2]; //优惠券剩余数量
-                          var coupon_receive = coupon_info_array[3]; //已领取数量
-                          var coupon_applyAmount = coupon_info_array[4]; //满多少使用的金额
-                          var coupon_limit = coupon_info_array[5]; //限领数量
-                          var coupon_startTime = coupon_info_array[6].replace(/\-/g,"/").substr(5); //优惠券开始使用日期
-                          var coupon_endTime = coupon_info_array[7].replace(/\-/g,"/").substr(5); //优惠券到期日期
-
-                          var coupon_receive_url = response_coupon.url;
-
-                          $("#fali_float_coupon_table_tbody").append("<tr>"+
-                                                                      "<td width=\'22%\'>"+ "满" + coupon_applyAmount + "减" + coupon_amount + "</td>"+
-                                                                      "<td width=\'22%\'>"+ coupon_startTime +" ~ "+ coupon_endTime +"</td>"+
-                                                                      "<td width=\'12%\'>"+ coupon_receive + "</td>" +
-                                                                      "<td width=\'12%\'>"+ coupon_rest + "</td>" +
-                                                                      "<td width=\'10%\'>"+ coupon_limit + "</td>" +
-                                                                      "<td width=\'11%\'>"+ "<a href=\""+ coupon_receive_url +"\" target=\"_blank\">领取</a>" + "</td>" +
-                                                                      "<td width=\'11%\'>"+ "<a class=\"copy_url\" data-clipboard-text=\"" + coupon_receive_url + "\" href=\"javascript:void(0);\">复制</a>" + "</td>" +
-                                                                      "</tr>");
-
-                        }else{//无优惠券可用 返回DELETE给API 删除 activity_id
-                          chrome.runtime.sendMessage({type:"pajax",postdata:{_method:"DELETE"},url:taokezhushou_url+"api/v1/coupons_base/"+activity_id});
-                          //$("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该张商品优惠券已经过期！</td></tr>");
-                        }
-
-                        var source = $("#fali_float_coupon_table_tbody").html();
-                        var coupons_num = faliUtils.strCount(source,"领取");
-                        $("#fali_head_coupon_count").html(" "+ coupons_num +"张");  //修改优惠券标题中的 优惠券数量
-                      }
-                    });
-                }
-
-              }else{
-                $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
-                console.log("该商品没有优惠券！");
-                $("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该商品没有优惠券！</td></tr>");
-              }
-            }
-          )
+        }else{
+          $("#getting_coupon").hide(); //隐藏正在获取优惠券的提示
+          $("#fali_float_coupon_table_tbody").append("<tr><td colspan=\"8\"> 该商品没有优惠券！</td></tr>");
         }
-      });
+      }
+    );
   },
   //componentWillMount会在组件render之前执行，并且永远都只执行一次。
   componentWillMount: function componentWillMount(){
@@ -417,7 +413,7 @@ var fali_float_simple_fanli_content_top = React.createClass({
       }
       var fanli_fl_li_simplefanliUrl = "http://pub.alimama.com/promo/search/index.htm?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId());
       var fanli_fl_li01 = React.DOM.li({id:'fanli_fl_li01'},"返利比例：",React.DOM.span({id:"fanli_fl_li_fanliRate"},new_fanliRate,"%"),"(￥",new_fanliCommFee,")");
-      var fanli_fl_li02 = React.DOM.li({id:'fanli_fl_li02'},"月返数量：",React.DOM.span({id:"fanli_fl_li_fanliTotalNum"},new_fanliTotalNum)," 件");
+      var fanli_fl_li02 = React.DOM.li({id:'fanli_fl_li02'},"月返数量：",React.DOM.span({id:"fanli_fl_li_fanliTotalNum"},new_fanliTotalNum)," 单");
       var fanli_fl_li03 = React.DOM.li({id:'fanli_fl_li03'},"月返金额：",React.DOM.span({id:"fanli_fl_li_fanliTotalFee"},new_fanliTotalFee)," 元");
       var fanli_fl_li04 = React.DOM.li({id:'fanli_fl_li04'},"返利链接：",React.DOM.a({id:"fanli_fl_li_simplefanliUrl",href:fanli_fl_li_simplefanliUrl,target:"_blank"},"生成链接"));
 
@@ -463,7 +459,6 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
   displayName:"fali_float_simple_fanli_content_bottom",
 
   getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
-    console.log($("#fali_float_simple_fanli_table_tbody_tr_td_loading").html());
     chrome.runtime.sendMessage({type:"gajax",url:""},
     function(response_simplefanliplan){
       if("ok"==response_simplefanliplan.msg){
@@ -485,38 +480,50 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
     var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'15%'},'平均返利');
     var fali_float_simple_fanli_table_thead_tr_th03 = React.DOM.th({width:'15%'},'人工审核');
     var fali_float_simple_fanli_table_thead_tr_th02 = React.DOM.th({width:'10%'},'类型');
-    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'25%'},'淘客返利计划');
+    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'25%'},'返利计划');
     var fali_float_simple_fanli_table_thead_tr = React.DOM.tr(null,fali_float_simple_fanli_table_thead_tr_th01,fali_float_simple_fanli_table_thead_tr_th02,
     fali_float_simple_fanli_table_thead_tr_th03,fali_float_simple_fanli_table_thead_tr_th04,fali_float_simple_fanli_table_thead_tr_th05,fali_float_simple_fanli_table_thead_tr_th06,fali_float_simple_fanli_table_thead_tr_th07);
 
     var fali_float_simple_fanli_table_thead = React.DOM.thead({id:'fali_float_simple_fanli_table_thead'},fali_float_simple_fanli_table_thead_tr);
 
-    // var fali_float_simple_fanli_table_tbody_tr_loading = React.createClass({ //判断用户是否登录了淘宝联盟账号
-    //   displayName:"fali_float_simple_fanli_table_tbody_tr_td_loading_a",
-    //
-    //   componentWillMount: function componentWillMount(){
-    //   },
-    //
-    //   render: function render() {
-    //     var alimama_loginUrl = "http://pub.alimama.com/myunion.htm";
-    //     return React.createElement(
-    //       "a",
-    //       {id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',
-    //        target:'_blank',
-    //        href:alimama_loginUrl
-    //       },
-    //       '点击登录淘宝联盟后刷新本页面查看返利计划'
-    //     );
-    //   }
-    // });
 
-      var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.DOM.a({id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',target:'_blank',href:'http://pub.alimama.com/myunion.htm'},
-                                                                            '点击登录淘宝联盟后刷新本页面查看返利计划');
-      var fali_float_simple_fanli_table_tbody_tr_td = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading_a);
-      var fali_float_simple_fanli_table_tbody_tr = React.DOM.tr(null,fali_float_simple_fanli_table_tbody_tr_td);
+    var fali_float_simple_fanli_table_tbody_tr = React.createClass({ //判断用户是否登录了淘宝联盟账号,提示 点击登录淘宝联盟后刷新本页面查看返利计划
+      displayName:"fali_float_simple_fanli_table_tbody_tr",
 
-    //明天2016-08-29 使用createClass 创建fali_float_simple_fanli_table_tbody ，componentWillMount() 判断是否登录 根据 登录情况 进行渲染
-    var fali_float_simple_fanli_table_tbody = React.DOM.tbody({id:'fali_float_coupon_table_tbody'},fali_float_simple_fanli_table_tbody_tr);
+      componentDidMount: function componentDidMount(){
+        chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/shopdetail/campaigns.json?oriMemberId="+faliUtils.getSellerId()+"&_input_charset=utf-8"},
+        function(response_simplefanli){
+          if("ok"==response_simplefanli.msg){
+            console.log(response_simplefanli);
+            if(false != response_simplefanli.data.hasOwnProperty("info")){ //已登陆淘宝联盟
+              if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
+                //有返利计划
+                $("#fali_float_simple_fanli_table_tbody_tr").remove();
+
+              }else{
+                //没有返利计划
+                $("#fali_float_simple_fanli_table_tbody_tr td").html("该商品没有返利计划");
+              }
+            }
+          }
+
+        });
+      },
+
+      render: function render() {
+        var fali_float_simple_fanli_table_tbody_tr_td_loading_a = React.DOM.a({id:'fali_float_simple_fanli_table_tbody_tr_td_loading_a',target:'_blank',href:'http://pub.alimama.com/myunion.htm'},
+                                                                              '点击登录淘宝联盟后刷新本页面查看返利计划');
+        var fali_float_simple_fanli_table_tbody_tr_td_loading = React.DOM.td({colSpan:'8'},fali_float_simple_fanli_table_tbody_tr_td_loading_a);
+
+        return React.createElement(
+          "tr",
+          {id:'fali_float_simple_fanli_table_tbody_tr'},
+          fali_float_simple_fanli_table_tbody_tr_td_loading
+        );
+      }
+    });
+
+    var fali_float_simple_fanli_table_tbody = React.DOM.tbody({id:'fali_float_simple_fanli_table_tbody'},React.createElement(fali_float_simple_fanli_table_tbody_tr, null));
 
     var fali_float_simple_fanli_table = React.DOM.table({width:'100%'},fali_float_simple_fanli_table_thead,fali_float_simple_fanli_table_tbody);
 
