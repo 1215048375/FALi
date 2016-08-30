@@ -513,7 +513,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                       var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
                       var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;
 
-
+                    //  console.log(tkSpecialCampaignIdRateMap);
 
                       var campaignInfo = new Array();
                       for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
@@ -554,7 +554,30 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                         for(var campaignItemId in tkSpecialCampaignIdRateMap){
                           chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId},
                               function(response){
-                                console.log(response);
+                                var campaignName;
+                                var campaignType;
+                                var avgfanliRate;
+                                var shopKeeperId;
+                                var fanliRate;
+                                if("ok"==response.msg){
+                                  //console.log(campaignInfo.length);
+                                  for(var i=0; i<campaignInfo.length;i++){
+                                    var isHidden = campaignItemId.indexOf("-");
+                                    if(campaignItemId.replace("-","") == campaignInfo[i].data.campaignId){
+                                      campaignName = campaignInfo[i].data.campaignName;
+                                      if(false == isHidden){
+                                        campaignType = campaignInfo[i].data.campaignType;
+                                      }else{
+                                        campaignType = '隐藏';
+                                      }
+                                      avgfanliRate = campaignInfo[i].data.avgfanliRate;
+                                      shopKeeperId = campaignInfo[i].data.shopKeeperId;
+                                      camaignKey = campaignInfo[i].data.campaignId;
+                                      //fanliRate ＝ tkSpecialCampaignIdRateMap.camaignKey;
+                                      console.log(campaignName+"-"+campaignType+"-"+avgfanliRate+"-"+camaignKey);
+                                    }
+                                  }
+                                }
                               });
                         }
 
