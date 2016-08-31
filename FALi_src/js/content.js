@@ -113,12 +113,10 @@ var FALiUtils = {
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
   },
-  getUrlParam:function(url,name){
-    alert(url);
+  getUrlParam2:function(url,name){
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
     var param = url.substr(url.indexOf("?")+1);
-    alert(param);
-    var r = params.match(reg);  //匹配目标参数
+    var r = param.match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
   },
   getItemId:function(){
@@ -512,7 +510,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
         chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/shopdetail/campaigns.json?oriMemberId="+faliUtils.getSellerId()+"&_input_charset=utf-8"},
         function(response_simplefanli){
           if("ok"==response_simplefanli.msg){
-            //console.log(response_simplefanli);
+            console.log(response_simplefanli);
             if(false != response_simplefanli.data.hasOwnProperty("info")){ //已登陆淘宝联盟
               if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
                 //有返利计划
@@ -526,7 +524,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
 
                       var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
                       var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;
-
+                      console.log(tkSpecialCampaignIdRateMap);
 
                       var campaignInfo = new Array();
                       for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
@@ -563,29 +561,27 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                           //console.log(campaignInfo);
                         }
                       }
-                        console.log(campaignInfo);
-                        console.log(tkSpecialCampaignIdRateMap);
+                      //  console.log(campaignInfo);
+                      //  console.log(tkSpecialCampaignIdRateMap);
                         for(var campaignItemId in tkSpecialCampaignIdRateMap){
-                          var campaignItemId = campaignItemId.replace("-","");
 
-                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId+"&shopkeeperId="+shopKeeperId},
+                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId},
                               function(response){
-                            //    alert(campaignItemId);
-                            //    alert(faliUtils.getUrlParam(response.url,"campaignId"));
+
+                                var campaignId = faliUtils.getUrlParam2(response.url,"campaignId");
                                 var campaignName;
                                 var campaignType;
                                 var avgfanliRate;
                                 var shopKeeperId;
                                 var fanliRate;
                                 if("ok"==response.msg){
-                                  //console.log(campaignItemId);
 
-                                  var isHidden = campaignItemId.indexOf("-");
+                                  var isHidden = campaignItemId.indexOf("-");  //
 
                                   for(var i=0; i<campaignInfo.length;i++){
 
-                                    //alert(campaignInfo[i].data.campaignId +" ---- "+ campaignItemId);
-                                    if(campaignInfo[i].data.campaignId == campaignItemId){
+                                    //alert(campaignInfo[i].data.campaignId +" ---- "+ campaignId);
+                                    if(campaignInfo[i].data.campaignId == campaignId){
                                       campaignName = campaignInfo[i].data.campaignName;
                                       if(-1 != isHidden){
                                         campaignType = campaignInfo[i].data.campaignType;
