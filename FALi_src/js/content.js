@@ -113,6 +113,14 @@ var FALiUtils = {
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]); return null; //返回参数值
   },
+  getUrlParam:function(url,name){
+    alert(url);
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var param = url.substr(url.indexOf("?")+1);
+    alert(param);
+    var r = params.match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+  },
   getItemId:function(){
     return this.getUrlParam('id');
   },
@@ -120,8 +128,14 @@ var FALiUtils = {
 		// 用正则匹配将各个字符从字符串中替换掉，直接用正则匹配的match().length获取每个字符出现的次数
 		source_str = source_str.replace(/(\s{2,}|\n)/gim,"");//去除空格
     var reg = new RegExp(count_str,"gim");
-    var result = source_str.match(reg).length;
-		return result;
+
+    var result = source_str.match(reg);
+    if(result != null){
+  		return result.length;
+    }else{
+      return 0;
+    }
+    //console.log(result);
 	},
   getSellerId:function(){
     var pageData = $(document.body).html(); //获取本页面源码
@@ -513,7 +527,6 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                       var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
                       var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;
 
-                    //  console.log(tkSpecialCampaignIdRateMap);
 
                       var campaignInfo = new Array();
                       for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
@@ -551,21 +564,30 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                         }
                       }
                         console.log(campaignInfo);
+                        console.log(tkSpecialCampaignIdRateMap);
                         for(var campaignItemId in tkSpecialCampaignIdRateMap){
-                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId},
+                          var campaignItemId = campaignItemId.replace("-","");
+
+                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId+"&shopkeeperId="+shopKeeperId},
                               function(response){
+                            //    alert(campaignItemId);
+                            //    alert(faliUtils.getUrlParam(response.url,"campaignId"));
                                 var campaignName;
                                 var campaignType;
                                 var avgfanliRate;
                                 var shopKeeperId;
                                 var fanliRate;
                                 if("ok"==response.msg){
-                                  //console.log(campaignInfo.length);
+                                  //console.log(campaignItemId);
+
+                                  var isHidden = campaignItemId.indexOf("-");
+
                                   for(var i=0; i<campaignInfo.length;i++){
-                                    var isHidden = campaignItemId.indexOf("-");
-                                    if(campaignItemId.replace("-","") == campaignInfo[i].data.campaignId){
+
+                                    //alert(campaignInfo[i].data.campaignId +" ---- "+ campaignItemId);
+                                    if(campaignInfo[i].data.campaignId == campaignItemId){
                                       campaignName = campaignInfo[i].data.campaignName;
-                                      if(false == isHidden){
+                                      if(-1 != isHidden){
                                         campaignType = campaignInfo[i].data.campaignType;
                                       }else{
                                         campaignType = '隐藏';
