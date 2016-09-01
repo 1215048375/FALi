@@ -610,7 +610,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                       for(var campaignItemId in tkSpecialCampaignIdRateMap){
                         if(-1 != campaignItemId.indexOf("-")){
                           var shopkeeperId = response_simplefanli.data.data.campaignList[0].shopKeeperId;
-                          var singleFanli = tkSpecialCampaignIdRateMap[campaignItemId];
+                          var singleFanli = tkSpecialCampaignIdRateMap[campaignItemId] + "%";
                           chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopkeeperId},
                               function(response){
                                 console.log(response);
