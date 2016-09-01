@@ -144,6 +144,24 @@ var FALiUtils = {
 };
 var faliUtils = Object.create(FALiUtils); //实例化FALiUtils对象
 
+function applyJihua(campId,keeperid){
+  chrome.runtime.sendMessage({type:"setting"},
+    function(response_settings){
+      chrome.runtime.sendMessage({type:"cookie",url:"http://alimama.com/",name:"_tb_token_"},
+        function(respose_cookie){"ok"==respose_cookie.msg&&
+          chrome.runtime.sendMessage(
+            {type:"pajax",url:"http://pub.alimama.com/pubauc/applyForCommonCampaign.json",postdata:{_tb_token_:respose_cookie.data,applyreason:response_settings.applyReason,campId:campId,keeperid:keeperid}},
+              function(respose_apply){
+                console.log(respose_apply);
+                if(respose_apply.data.hasOwnProperty("info")&&1==respose_apply.data.info.ok){
+
+                }
+              });
+            });
+          });
+  }
+
+
 //获取各个数据，渲染网页
 /***********fali_logo start***********/
 var fali_head_logo_a_div = React.DOM.div({id:'fali_head_logo_a_div'},"F•ALi");
@@ -514,16 +532,18 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
             if(false != response_simplefanli.data.hasOwnProperty("info")){ //已登陆淘宝联盟
               if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
                 //有返利计划
-                $("#fali_float_simple_fanli_table_tbody_tr").remove();
+                $("#fali_float_simple_fanli_table_tbody_tr").remove();//删除登录的提示
 
                 chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/items/search.json?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&perPageSize=50"},
                 function(response){
 
                   if("ok"==response.msg){
+
                     if(response.data.hasOwnProperty("data")&&response.data.data.hasOwnProperty("pageList")&&null!=response.data.data.pageList){
 
                       var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
-                      var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;
+                      var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;//所有返利计划ID和当前商品返利比例
+
                       console.log(tkSpecialCampaignIdRateMap);
 
                       var campaignInfo = new Array();
@@ -533,6 +553,17 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                         var shopKeeperId = response_simplefanli.data.data.campaignList[i].shopKeeperId; //shopkeeperId
                         var campaignId = response_simplefanli.data.data.campaignList[i].campaignId;   //计划ID
                         var campaignType = response_simplefanli.data.data.campaignList[i].campaignType; //计划类型
+                        var properties = response_simplefanli.data.data.campaignList[i].properties;  //计划属性用于 计划是否人工审核
+                        switch (properties) {
+                          case 1:
+                            properties = "否";
+                            break;
+                          case 2:
+                            properties = "是";
+                          default:
+                            properties = "是";
+                            break;
+                        }
                         switch (campaignType) {
                           case 1:
                             campaignType = '通用';
@@ -550,57 +581,54 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                           $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
                                                                       "<td width=\'22%\'>"+ planName + "</td>"+
                                                                       "<td width=\'10%\'>"+ campaignType +"</td>"+
-                                                                      "<td width=\'15%\'>"+ "否" + "</td>" +
+                                                                      "<td width=\'15%\'>"+ properties + "</td>" +
                                                                       "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
                                                                       "<td width=\'16%\'>"+ new_fanliRate + "%</td>" +
                                                                       "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
-                                                                      "<td width=\'10%\'> - </td>" +
+                                                                      "<td width=\'10%\'> 无 </td>" +
                                                                       "</tr>");
                         }else{
-                          campaignInfo.push({data:{campaignId:campaignId,campaignName:planName,campaignType:campaignType,avgfanliRate:avgfanliRate,shopKeeperId:shopKeeperId}});
-                          //console.log(campaignInfo);
+                          var singleFanli = tkSpecialCampaignIdRateMap[campaignId] + "%";
+
+                        //  campaignInfo.push({campaignId:campaignId,campaignName:planName,campaignType:campaignType,properties:properties,avgfanliRate:avgfanliRate,singleFanli:singleFanli,shopKeeperId:shopKeeperId});
+                        //  console.log(campaignInfo);
+                          var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
+                          $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
+                                                                      "<td width=\'22%\'>"+ planName + "</td>"+
+                                                                      "<td width=\'10%\'>"+ campaignType +"</td>"+
+                                                                      "<td width=\'15%\'>"+ properties + "</td>" +
+                                                                      "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
+                                                                      "<td width=\'16%\'>"+ singleFanli + "</td>" +
+                                                                      "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
+                                                                      "<td width=\'10%\'>"+ "<a href=\"javascript:void(0);\" id=\""+campaignId+"\" target=\"_blank\">申请</a>" + "</td>" +
+                                                                      "</tr>");
+
                         }
                       }
-                      //  console.log(campaignInfo);
-                      //  console.log(tkSpecialCampaignIdRateMap);
-                        for(var campaignItemId in tkSpecialCampaignIdRateMap){
 
-                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId},
+                      //隐藏计划 信息
+                      for(var campaignItemId in tkSpecialCampaignIdRateMap){
+                        if(-1 != campaignItemId.indexOf("-")){
+                          var shopkeeperId = response_simplefanli.data.data.campaignList[0].shopKeeperId;
+                          var singleFanli = tkSpecialCampaignIdRateMap[campaignItemId];
+                          chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/campaign/campaignDetail.json?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopkeeperId},
                               function(response){
-
-                                var campaignId = faliUtils.getUrlParam2(response.url,"campaignId");
-                                var campaignName;
-                                var campaignType;
-                                var avgfanliRate;
-                                var shopKeeperId;
-                                var fanliRate;
-                                if("ok"==response.msg){
-
-                                  var isHidden = campaignItemId.indexOf("-");  //
-
-                                  for(var i=0; i<campaignInfo.length;i++){
-
-                                    //alert(campaignInfo[i].data.campaignId +" ---- "+ campaignId);
-                                    if(campaignInfo[i].data.campaignId == campaignId){
-                                      campaignName = campaignInfo[i].data.campaignName;
-                                      if(-1 != isHidden){
-                                        campaignType = campaignInfo[i].data.campaignType;
-                                      }else{
-                                        campaignType = '隐藏';
-                                      }
-                                      avgfanliRate = campaignInfo[i].data.avgfanliRate;
-                                      shopKeeperId = campaignInfo[i].data.shopKeeperId;
-                                      camaignKey = campaignInfo[i].data.campaignId;
-                                      //fanliRate ＝ tkSpecialCampaignIdRateMap.camaignKey;
-                                      console.log(campaignName+"-"+campaignType+"-"+avgfanliRate+"-"+camaignKey);
-                                    }
-                                  }
-                                }
+                                console.log(response);
+                                var properties = response.data.data.cpsCampaignDO.properties!=1?"是":"否";
+                                var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
+                                $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
+                                                                            "<td width=\'22%\'>"+ response.data.data.cpsCampaignDO.campaignName + "</td>"+
+                                                                            "<td width=\'10%\'>"+ "隐藏" +"</td>"+
+                                                                            "<td width=\'15%\'>"+  properties + "</td>" +
+                                                                            "<td width=\'16%\'>"+ "无" + "</td>" +
+                                                                            "<td width=\'16%\'>"+ singleFanli + "</td>" +
+                                                                            "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
+                                                                            "<td width=\'10%\'> - </td>" +
+                                                                            "</tr>");
                               });
                         }
 
-
-
+                      }
 
 
                     }
