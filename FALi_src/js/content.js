@@ -474,21 +474,6 @@ var fali_float_simple_fanli_content_top = React.createClass({
 var fali_float_simple_fanli_content_bottom = React.createClass({
   displayName:"fali_float_simple_fanli_content_bottom",
 
-  // getSimpleFanliPlanInfo: function getSimpleFanliPlanInfo() { //获取淘客返利计划
-  //   chrome.runtime.sendMessage({type:"gajax",url:""},
-  //   function(response_simplefanliplan){
-  //     if("ok"==response_simplefanliplan.msg){
-  //
-  //     }
-  //
-  //   });
-  // },
-  //
-  // //componentWillMount会在组件render之前执行，并且永远都只执行一次。
-  // componentWillMount: function componentWillMount(){
-  //   this.getSimpleFanliPlanInfo();
-  // },
-
   render: function render() {
     //var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
     var fali_float_simple_fanli_table_thead_tr_th06 = React.DOM.th({width:'10%'},'详情');
@@ -694,8 +679,7 @@ var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},fali_
 
 
 //fali_float_high_fanli div start,浮动显示高额返利的div块，是fali_wrapper的子块
-
-
+//
 var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},'fali_float_high_fanli');
 
 
