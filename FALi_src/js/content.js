@@ -144,24 +144,6 @@ var FALiUtils = {
 };
 var faliUtils = Object.create(FALiUtils); //实例化FALiUtils对象
 
-function applyJihua(campId,keeperid){
-  chrome.runtime.sendMessage({type:"setting"},
-    function(response_settings){
-      chrome.runtime.sendMessage({type:"cookie",url:"http://alimama.com/",name:"_tb_token_"},
-        function(respose_cookie){"ok"==respose_cookie.msg&&
-          chrome.runtime.sendMessage(
-            {type:"pajax",url:"http://pub.alimama.com/pubauc/applyForCommonCampaign.json",postdata:{_tb_token_:respose_cookie.data,applyreason:response_settings.applyReason,campId:campId,keeperid:keeperid}},
-              function(respose_apply){
-                console.log(respose_apply);
-                if(respose_apply.data.hasOwnProperty("info")&&1==respose_apply.data.info.ok){
-
-                }
-              });
-            });
-          });
-  }
-
-
 //获取各个数据，渲染网页
 /***********fali_logo start***********/
 var fali_head_logo_a_div = React.DOM.div({id:'fali_head_logo_a_div'},"F•ALi");
@@ -508,15 +490,15 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
   // },
 
   render: function render() {
-    var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
+    //var fali_float_simple_fanli_table_thead_tr_th07 = React.DOM.th({width:'10%'},'操作');
     var fali_float_simple_fanli_table_thead_tr_th06 = React.DOM.th({width:'10%'},'详情');
-    var fali_float_simple_fanli_table_thead_tr_th05 = React.DOM.th({width:'16%'},'单品返利');
-    var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'16%'},'平均返利');
-    var fali_float_simple_fanli_table_thead_tr_th03 = React.DOM.th({width:'15%'},'人工审核');
+    var fali_float_simple_fanli_table_thead_tr_th05 = React.DOM.th({width:'17%'},'单品返利');
+    var fali_float_simple_fanli_table_thead_tr_th04 = React.DOM.th({width:'17%'},'平均返利');
+    var fali_float_simple_fanli_table_thead_tr_th03 = React.DOM.th({width:'16%'},'人工审核');
     var fali_float_simple_fanli_table_thead_tr_th02 = React.DOM.th({width:'10%'},'类型');
-    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'23%'},'返利计划');
+    var fali_float_simple_fanli_table_thead_tr_th01 = React.DOM.th({width:'30%'},'返利计划');
     var fali_float_simple_fanli_table_thead_tr = React.DOM.tr(null,fali_float_simple_fanli_table_thead_tr_th01,fali_float_simple_fanli_table_thead_tr_th02,
-    fali_float_simple_fanli_table_thead_tr_th03,fali_float_simple_fanli_table_thead_tr_th04,fali_float_simple_fanli_table_thead_tr_th05,fali_float_simple_fanli_table_thead_tr_th06,fali_float_simple_fanli_table_thead_tr_th07);
+    fali_float_simple_fanli_table_thead_tr_th03,fali_float_simple_fanli_table_thead_tr_th04,fali_float_simple_fanli_table_thead_tr_th05,fali_float_simple_fanli_table_thead_tr_th06);
 
     var fali_float_simple_fanli_table_thead = React.DOM.thead({id:'fali_float_simple_fanli_table_thead'},fali_float_simple_fanli_table_thead_tr);
 
@@ -579,13 +561,13 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                         if(0 == campaignId ){
                           var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
                           $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
-                                                                      "<td width=\'22%\'>"+ planName + "</td>"+
+                                                                      "<td width=\'30%\'>"+ planName + "</td>"+
                                                                       "<td width=\'10%\'>"+ campaignType +"</td>"+
-                                                                      "<td width=\'15%\'>"+ properties + "</td>" +
-                                                                      "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
-                                                                      "<td width=\'16%\'>"+ new_fanliRate + "%</td>" +
+                                                                      "<td width=\'16%\'>"+ properties + "</td>" +
+                                                                      "<td width=\'17%\'>"+ avgfanliRate + "</td>" +
+                                                                      "<td width=\'17%\'>"+ new_fanliRate + "%</td>" +
                                                                       "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
-                                                                      "<td width=\'10%\'> 无 </td>" +
+                                                                      //"<td width=\'10%\'> 无 </td>" +
                                                                       "</tr>");
                         }else{
                           var singleFanli = tkSpecialCampaignIdRateMap[campaignId] + "%";
@@ -594,14 +576,45 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                         //  console.log(campaignInfo);
                           var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignId+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
                           $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
-                                                                      "<td width=\'22%\'>"+ planName + "</td>"+
+                                                                      "<td width=\'30%\'>"+ planName + "</td>"+
                                                                       "<td width=\'10%\'>"+ campaignType +"</td>"+
-                                                                      "<td width=\'15%\'>"+ properties + "</td>" +
-                                                                      "<td width=\'16%\'>"+ avgfanliRate + "</td>" +
-                                                                      "<td width=\'16%\'>"+ singleFanli + "</td>" +
+                                                                      "<td width=\'16%\'>"+ properties + "</td>" +
+                                                                      "<td width=\'17%\'>"+ avgfanliRate + "</td>" +
+                                                                      "<td width=\'17%\'>"+ singleFanli + "</td>" +
                                                                       "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
-                                                                      "<td width=\'10%\'>"+ "<a href=\"javascript:void(0);\" id=\""+campaignId+"\" target=\"_blank\">申请</a>" + "</td>" +
+                                                                      //"<td width=\'10%\' id=\""+campaignId+"\"></td>" +
                                                                       "</tr>");
+                          // var applyCampaigna = React.createClass({
+                          //       displayName: "applyCampaigna",
+                          //
+                          //       applyJihua:function (){
+                          //         alert("---");
+                          //         chrome.runtime.sendMessage({type:"setting"},
+                          //           function(response_settings){
+                          //             chrome.runtime.sendMessage({type:"cookie",url:"http://alimama.com/",name:"_tb_token_"},
+                          //               function(respose_cookie){"ok"==respose_cookie.msg&&
+                          //                 chrome.runtime.sendMessage(
+                          //                   {type:"pajax",url:"http://pub.alimama.com/pubauc/applyForCommonCampaign.json",postdata:{_tb_token_:respose_cookie.data,applyreason:response_settings.applyReason,campId:campaignId,keeperid:shopKeeperId}},
+                          //                     function(respose_apply){
+                          //                       console.log(respose_apply);
+                          //                       if(respose_apply.data.hasOwnProperty("info")&&1==respose_apply.data.info.ok){
+                          //
+                          //                       }
+                          //                     });
+                          //                   });
+                          //                 });
+                          //         },
+                          //       render: function render() {
+                          //         return React.createElement(
+                          //           "a",
+                          //           {href:"javascript:void(0);",
+                          //           onClick:this.applyJihua(),
+                          //           className:campaignId},
+                          //           "申请"
+                          //         );
+                          //       }
+                          //     });
+                          // ReactDOM.render(React.createElement(applyCampaigna, null), document.getElementById(campaignId));
 
                         }
                       }
@@ -617,13 +630,13 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                                 var properties = response.data.data.cpsCampaignDO.properties!=1?"是":"否";
                                 var xiangqingURL = "http://pub.alimama.com/myunion.htm?#!/promo/self/campaign?campaignId="+campaignItemId.replace("-","")+"&shopkeeperId="+shopKeeperId+"&userNumberId="+faliUtils.getSellerId();
                                 $("#fali_float_simple_fanli_table_tbody").append("<tr>"+
-                                                                            "<td width=\'22%\'>"+ response.data.data.cpsCampaignDO.campaignName + "</td>"+
+                                                                            "<td width=\'30%\'>"+ response.data.data.cpsCampaignDO.campaignName + "</td>"+
                                                                             "<td width=\'10%\'>"+ "隐藏" +"</td>"+
-                                                                            "<td width=\'15%\'>"+  properties + "</td>" +
-                                                                            "<td width=\'16%\'>"+ "无" + "</td>" +
-                                                                            "<td width=\'16%\'>"+ singleFanli + "</td>" +
+                                                                            "<td width=\'16%\'>"+  properties + "</td>" +
+                                                                            "<td width=\'17%\'>"+ "无" + "</td>" +
+                                                                            "<td width=\'17%\'>"+ singleFanli + "</td>" +
                                                                             "<td width=\'10%\'>"+ "<a href=\""+xiangqingURL+"\" target=\"_blank\">详情</a>" + "</td>" +
-                                                                            "<td width=\'10%\'> - </td>" +
+                                                                            //"<td width=\'10%\'> - </td>" +
                                                                             "</tr>");
                               });
                         }
@@ -678,7 +691,11 @@ var fali_float_simple_fanli_content = React.DOM.div({id:'fali_float_simple_fanli
 
 var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},fali_float_simple_fanli_content);
 
+
+
 //fali_float_high_fanli div start,浮动显示高额返利的div块，是fali_wrapper的子块
+
+
 var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},'fali_float_high_fanli');
 
 
