@@ -382,7 +382,7 @@ var helpUl_li04 = React.DOM.li(null,'4.生成推广链接，打开推广链接�
 var helpUl_li05 = React.DOM.li(null,'5.付款之后可在淘宝联盟查看到返利，每月20日为结算日，返利可提现到对应支付宝。');
 var helpUl = React.DOM.ul(null,helpUl_li01,helpUl_li02,helpUl_li03,helpUl_li04,helpUl_li05);
 var helpTitle = React.DOM.h2(null,"使用帮助");
-var helpBottom = React.DOM.h1(null,"交流QQ：443580003 , 发布的有点草率，闲了再美化美化!   :)");
+var helpBottom = React.DOM.h1(null,"交流QQ：443580003 QQ群：250820754 , 发布的有点草率，闲了再美化美化!   :)");
 var fali_content_wrapper = React.DOM.div({id:'fali_content_wrapper'},helpTitle,helpUl,helpBottom);
 var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},fali_content_wrapper);
 //fali_float_qushi div start,浮动显示价格趋势的div块，是fali_wrapper的子块
