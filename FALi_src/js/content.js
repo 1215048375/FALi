@@ -375,8 +375,16 @@ var fali_head_high_fanli = React.DOM.div({id:'fali_head_high_fanli',className:'n
 var fali_head = React.DOM.div({id:'fali_head'},fali_head_logo,fali_head_qushi,fali_head_coupon,fali_head_simple_fanli,fali_head_high_fanli); //DIV : id=fal_head ,内部包含： logo 价格趋势 普通返利 高额返利 加群赞助 5个块
 
 //fali_content start
-var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},'fali_content');
-
+var helpUl_li01 = React.DOM.li(null,'1.购买之前，领取本插件收集到的店铺优惠券。');
+var helpUl_li02 = React.DOM.li(null,'2.使用普通返利或高额返利生成返利链接，打开返利链接。');
+var helpUl_li03 = React.DOM.li(null,'3.点击立即推广按钮，使用您的淘宝号登录淘宝联盟，设置推广位。');
+var helpUl_li04 = React.DOM.li(null,'4.生成推广链接，打开推广链接，直接购买（不要加入购物车）。');
+var helpUl_li05 = React.DOM.li(null,'5.付款之后可在淘宝联盟查看到返利，每月20日为结算日，返利可提现到对应支付宝。');
+var helpUl = React.DOM.ul(null,helpUl_li01,helpUl_li02,helpUl_li03,helpUl_li04,helpUl_li05);
+var helpTitle = React.DOM.h2(null,"使用帮助");
+var helpBottom = React.DOM.h1(null,"交流QQ：443580003 , 发布的有点草率，闲了再美化美化!   :)");
+var fali_content_wrapper = React.DOM.div({id:'fali_content_wrapper'},helpTitle,helpUl,helpBottom);
+var fali_content = React.DOM.div({id:'fali_content',className:'no-top-border'},fali_content_wrapper);
 //fali_float_qushi div start,浮动显示价格趋势的div块，是fali_wrapper的子块
 var fali_float_qushi = React.DOM.div({id:'fali_float_qushi'});
 

@@ -201,3 +201,14 @@
   width: 96%;
   margin: 15px auto;
 }
+#fali_content_wrapper{
+  width:96%;
+  margin:0 15px 15px 15px;
+}
+#fali_content_wrapper h2{
+  padding-top: 20px;
+}
+#fali_content_wrapper li{
+  margin: 10px auto;
+  border-bottom: 1px dotted #dedede;
+}
