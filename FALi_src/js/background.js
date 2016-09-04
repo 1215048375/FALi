@@ -1,6 +1,6 @@
 var firstInstall = window.localStorage.firstInstall;
 if(typeof firstInstall == 'undefined'){
-	chrome.tabs.create({url:"http://www.taokezhushou.com?from=plugin",selected:true});
+	chrome.tabs.create({url:"http://www.kanhaody.com",selected:true});
 	window.localStorage.firstInstall = "true";
 }
 if (typeof window.localStorage.hidePlugin == 'undefined') {
