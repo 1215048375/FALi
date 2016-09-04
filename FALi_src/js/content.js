@@ -495,7 +495,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
         chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/shopdetail/campaigns.json?oriMemberId="+faliUtils.getSellerId()+"&_input_charset=utf-8"},
         function(response_simplefanli){
           if("ok"==response_simplefanli.msg){
-            console.log(response_simplefanli);
+          //  console.log(response_simplefanli);
             if(false != response_simplefanli.data.hasOwnProperty("info")){ //已登陆淘宝联盟
               if(response_simplefanli.data.hasOwnProperty("data")&&null!=response_simplefanli.data.data&&response_simplefanli.data.data.hasOwnProperty("campaignList")&&response_simplefanli.data.data.campaignList.length>0){
                 //有返利计划
@@ -511,7 +511,7 @@ var fali_float_simple_fanli_content_bottom = React.createClass({
                       var new_fanliRate =  response.data.data.pageList[0].tkRate; //普通返利比例
                       var tkSpecialCampaignIdRateMap = response.data.data.pageList[0].tkSpecialCampaignIdRateMap;//所有返利计划ID和当前商品返利比例
 
-                      console.log(tkSpecialCampaignIdRateMap);
+                    //  console.log(tkSpecialCampaignIdRateMap);
 
                       var campaignInfo = new Array();
                       for(var i = 0 ; i<response_simplefanli.data.data.campaignList.length;i++){
@@ -679,8 +679,81 @@ var fali_float_simple_fanli = React.DOM.div({id:'fali_float_simple_fanli'},fali_
 
 
 //fali_float_high_fanli div start,浮动显示高额返利的div块，是fali_wrapper的子块
-//
-var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},'fali_float_high_fanli');
+var fali_float_high_fanli_content_top = React.createClass({
+  displayName:"fali_float_high_fanli_content_top",
+
+  getHighFanliInfo: function getHighFanliInfo() { //获取返利基本信息
+    chrome.runtime.sendMessage({type:"gajax",url:"http://pub.alimama.com/items/channel/qqhd.json?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&channel=qqhd&perPageSize=40"},
+    function(response_highfanli){
+      console.log(response_highfanli);
+      if("ok"==response_highfanli.msg && response_highfanli.data.hasOwnProperty("data")&&response_highfanli.data.data.hasOwnProperty("pageList")&&null!=response_highfanli.data.data.pageList){
+        var new_fanliRate =  0; //普通返利比例
+        var new_fanliCommFee =  0; //单比返利金额
+        var new_fanliTotalNum =  0; //普通返利推广量
+        var new_fanliTotalFee =  0; //普通返利推广返利总金额
+
+        if("ok"==response_highfanli.msg){
+          if(response_highfanli.data.hasOwnProperty("data")&&response_highfanli.data.data.hasOwnProperty("pageList")&&null!=response_highfanli.data.data.pageList){
+            //console.log(response_simplefanli.data.data.pageList[0]);
+            new_fanliRate =  response_highfanli.data.data.pageList[0].eventRate; //普通返利比例
+            new_fanliCommFee =  response_highfanli.data.data.pageList[0].tkCommFee; //单比返利金额
+            new_fanliTotalNum =  response_highfanli.data.data.pageList[0].totalNum; //普通返利推广量
+            new_fanliTotalFee =  response_highfanli.data.data.pageList[0].totalFee; //普通返利推广返利总金额
+            var tkSpecialCampaignIdRateMap = response_highfanli.data.data.pageList[0].tkSpecialCampaignIdRateMap;
+
+            //$("#fali_head_simple_fanli").append("<span id=\"current_fanliRate\" style=\"display:none\">"+new_fanliRate.toString()+"</span>");
+            //$("#fali_head_simple_fanli").append("<span id=\"campaigns_id\" style=\"display:none\">"+JSON.stringify(tkSpecialCampaignIdRateMap)+"</span>");
+
+            $("#fali_head_high_fanli_percent").html(" " + new_fanliRate + "%");
+          }
+        }
+        var fanli_fl_li_simplefanliUrl = "http://pub.alimama.com/promo/item/channel/index.htm?q="+encodeURIComponent("http://item.taobao.com/item.htm?id="+faliUtils.getItemId())+"&channel=qqhd";
+        var fanli_fl_li01 = React.DOM.li({id:'fanli_fl_li01'},"返利比例：",React.DOM.span({id:"fanli_fl_li_fanliRate"},new_fanliRate,"%"),"(￥",new_fanliCommFee,")");
+        var fanli_fl_li02 = React.DOM.li({id:'fanli_fl_li02'},"月返数量：",React.DOM.span({id:"fanli_fl_li_fanliTotalNum"},new_fanliTotalNum)," 单");
+        var fanli_fl_li03 = React.DOM.li({id:'fanli_fl_li03'},"月返金额：",React.DOM.span({id:"fanli_fl_li_fanliTotalFee"},new_fanliTotalFee)," 元");
+        var fanli_fl_li04 = React.DOM.li({id:'fanli_fl_li04'},"返利链接：",React.DOM.a({id:"fanli_fl_li_simplefanliUrl",href:fanli_fl_li_simplefanliUrl,target:"_blank"},"生成链接"));
+
+        var fanli_fl_ul = React.createClass({
+          displayName: "fanli_fl_ul",
+
+          render: function render() {
+            return React.createElement(
+              "ul",
+              {id:'fanli_fl_ul'},
+              fanli_fl_li01,
+              fanli_fl_li02,
+              fanli_fl_li04,
+              fanli_fl_li03
+            );
+          }
+        });
+
+        ReactDOM.render(React.createElement(fanli_fl_ul, null), document.getElementById('fali_float_high_fanli_content_top'));
+
+
+      }
+    });
+  },
+  //componentWillMount会在组件render之前执行，并且永远都只执行一次。
+  componentWillMount: function componentWillMount(){
+    this.getHighFanliInfo();
+  },
+
+  //这个方法会在组件加载完毕之后立即执行。在这个时候之后组件已经生成了对应的DOM结构，可以通过this.getDOMNode()来进行访问。
+  componentDidMount: function componentDidMount() {
+
+  },
+
+  render: function render() {
+    return React.createElement(
+      "div",
+      {id:'fali_float_high_fanli_content_top',className:'clearfix'}
+    );
+  }
+});
+var fali_float_high_fanli_content = React.DOM.div({id:'fali_float_high_fanli_content'},
+                                                    React.createElement(fali_float_high_fanli_content_top, null));
+var fali_float_high_fanli = React.DOM.div({id:'fali_float_high_fanli'},fali_float_high_fanli_content);
 
 
 var faliElements = React.createClass({
