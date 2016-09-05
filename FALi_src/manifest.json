@@ -18,8 +18,7 @@
   },
   "browser_action": {
     "default_icon": "icon16.png",
-    "default_title": "淘宝省钱助手",
-    "default_popup": "popup/index.html"
+    "default_title": "淘宝省钱助手"
   },
   "content_scripts": [
 	{
