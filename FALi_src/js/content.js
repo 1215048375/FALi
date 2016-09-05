@@ -738,7 +738,9 @@ var fali_float_high_fanli_content_top = React.createClass({
 
         ReactDOM.render(React.createElement(fanli_fl_ul, null), document.getElementById('fali_float_high_fanli_content_top'));
 
-
+      }else{
+        var donthaveHighFanli = React.DOM.h1(null,"没有高额返利，使用普通返利生成链接吧！ :)");
+        ReactDOM.render(donthaveHighFanli, document.getElementById('fali_float_high_fanli_content_top'));
       }
     });
   },
